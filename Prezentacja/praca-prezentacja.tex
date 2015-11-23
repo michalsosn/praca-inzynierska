@@ -1,0 +1,71 @@
+\documentclass[polish]{beamer}
+
+\usepackage{polski}
+\usepackage[beamer,customcolors]{hf-tikz}
+\hfsetfillcolor{alerted text.fg!10}
+\hfsetbordercolor{alerted text.fg}
+
+\usetheme[titlepagelogo=images/template/Logo-PŁ,
+  color=green,
+  language=polish,
+  pageofpages=z
+  ]{TorinoTh}
+\author{Michał Sośnicki}
+\rel{dr inż. Jan Stolarek}
+\title[Praca inżynierska]{Usprawnienie programowania z użyciem\\ typów w Glasgow Haskell Compiler}
+\ateneo{Politechnika Łódzka}
+\date{\today}
+
+\setrellabel{Promotor}
+\setcandidatelabel{Dyplomant}
+\setsubject{Praca inżynierska}
+
+\begin{document}
+\titlepageframe
+
+\begin{tframe}{Wstęp}
+\alert{thee} eads
+
+\highlight{theee} eadsasdd asd
+
+\highlightbf{theeee} eads sd s dsddd
+
+\begin{itemize}
+    \item \label{name-reference} in the starting point
+    \item \ref{name-reference} in the point you want to show the reference
+    \item \href{url}{name-url} to specify web addresses
+\end{itemize}
+
+\[\tikzmarkin<2->{a}x+
+\tikzmarkin<1>{b}y\tikzmarkend{b}
+=10\tikzmarkend{a}\]
+\end{tframe}
+
+\begin{tframe}{Bloczki}
+\begin{block}
+<1->{Bloczek}
+asdasdasdasd
+\end{block}
+\begin{block}
+<2->{Bloczek pieszczoszek}
+Lorem ipsum pro dolorem
+\end{block}
+\end{tframe}
+
+
+\begin{tframe}{Title}
+Zalety:
+\begin{adv}
+	\item chuj
+	\item dupa
+	\item kamienikupa
+\end{adv}
+Wady:
+\begin{disadv}
+	\item chuj
+	\item dupa
+	\item kamienikupa
+\end{disadv}
+\end{tframe}
+
+\end{document}

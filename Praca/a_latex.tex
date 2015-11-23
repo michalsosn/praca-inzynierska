@@ -1,0 +1,67 @@
+\chapter{Edycja i~formatowanie pracy}\label{app:edycja}
+
+Pracę należy przygotować korzystając z~systemu składu \LaTeX~(czyt.
+\textit{latech}).  Bardzo dobre wprowadzenie do \LaTeX~stanowi ``The Not So
+Short Introduction to \LaTeXe'' \cite{Oet11}.
+
+\section{Kwestie techniczne}
+Aby móc składać dokumenty z~użyciem \LaTeX~należy go oczywiście najpierw
+zainstalować.  Dostępnych jest wiele dystrybucji \LaTeX. Osobiście korzystam
+z~TeX Live \cite{texlive}, dostępnego zarówno pod Windowsa jak i~Linuksa. Dobrze
+jest również zaopatrzyć się w~środowisko do \LaTeX~i~BibTeX (o tym drugim więcej
+w~sekcji \ref{sec:app:bibliografia}).  Użytkownikom Linuksa polecam edytor
+Emacs~\cite{emacs} albo Kile~\cite{kile} oraz program KBibTeX \cite{kbibtex}.
+
+Wymagane jest przechowywanie pracy w repozytorium kodu źródłowego.  Preferowanym
+systemem kontroli wersji jest git.  Darmowe repozytoria gita można założyć w
+serwisie GitHub~\cite{github} albo, po kontakcie ze mną, na serwerze uczelni.
+
+Do pracy dołączony jest plik \texttt{Makefile} służący do zbudowania pliku PDF
+ze źródłowych plików tex.  Należy dbać o poprawne działanie tego pliku, np. po
+dodaniu nowego pliku źródłowego albo usunięciu istniejącego należy uaktualnić
+listę plików źródłowych w tym pliku.
+
+\section{Formatowanie}
+Należy zachować formatowanie zgodne z~niniejszym szablonem. Wymagany jest druk
+dwustronny pracy.  W~związku z~tym proszę zwrócić szczególną uwagę na położenie
+szerszego marginesu. Powinien się on oczywiście znajdować od strony bindowania.
+
+Wszystkie ustawienia marginesów, stylu nagłówków, wykorzystanych pakietów etc.
+znajdują się w~pliku \texttt{praca\_dyplomowa.sty}.
+
+Należy unikać wiszących spójników (zwanych też sierotami). W~tym celu należy
+stosować po spójnikach twardą spację. W~\LaTeX~uzyskuje się ten efekt poprzez
+umieszczenie pomiędzy spójnikiem a~następującym po nim słowem znaku tyldy.
+W~celu ułatwienia tego procesu do szablonu dołączono plik
+\texttt{korekta.sh}. Jest to prosty skrypt basha -- użytkownicy Windowsa muszą
+go dostosować do swojego systemu -- który używa programu \texttt{sed} do
+wstawienia twardej spacji po spójnikach we wszystkich plikach z~rozszerzeniem
+*.tex w~bieżącym katalogu.  Przed uruchomieniem skryptu należy dla
+bezpieczeństwa wykonać commit.
+
+Przy składaniu pracy przydatny może okazać się tryb draft, który sprawi że
+zaznaczane będą miejsca w~których tekst nie został prawidłowo złamany. Jeśli
+\LaTeX~nie potrafi prawidłowo złamać jakiegoś słowa można w~preambule dokumentu
+użyć polecenia \texttt{hyphenation}.
+
+\section{Bibliografia}\label{sec:app:bibliografia}
+Wszystkie źródła informacji, rysunków, danych itd., które zostały wykorzystane
+przy tworzeniu pracy muszą zostać podane w~bibliografii. Ponadto, wszystkie
+źródła podane w~bibliografii muszą być cytowane w~tekście. Za każdym razem,
+kiedy w~pracy pojawia się treść na podstawie jakiegoś tekstu źródłowego czyjegoś
+autorstwa, oznaczamy takie miejsce cytowaniem~\cite[str. 9]{Nie10}.  Należy
+wyraźnie zaznaczyć kiedy dokonywany jest dosłowny cytat z innej pracy.
+\textbf{Należy pamiętać, że korzystanie ze źródeł bez ich podania w~bibliografii
+  może być podstawą do oskarżenia o~plagiat.}
+
+Należy zwrócić szczególną uwagę na jakość cytowanych źródeł internetowych.
+Najlepszym rozwiązaniem jest ograniczenie się, na ile to możliwe, do oficjalnych
+stron projektów. Ponadto, odnośniki do źródeł elektronicznych muszą zawierać
+pełną ścieżkę do zasobu.
+
+Bibliografię należy przygotować korzystając z~mechanizmów dostarczanych przez
+LaTeX (patrz rozdział 4.2 w~\cite{Oet11}). Zalecam korzystanie w~tym celu
+z~BibTeX.  BibTeX sam wygeneruje bibliografię na podstawie przygotowanej prostej
+bazy danych i~zagwarantuje że w~spisie literatury pojawią się tylko te pozycje,
+które są faktycznie cytowane w~pracy. Pozwoli to zaoszczędzić naprawdę sporo
+czasu.

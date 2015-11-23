@@ -1,0 +1,14 @@
+### OS Specific
+Thumbs.db
+.DS_Store
+*.log
+*.patch
+*.tmp
+*.bak
+*.swp
+
+### Latex
+*.log
+*.pdf
+*.aux
+*.out
