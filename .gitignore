@@ -12,3 +12,9 @@ Thumbs.db
 *.pdf
 *.aux
 *.out
+*.nav
+*.snm
+*.toc
+*.vrb
+
+Pomoce/
