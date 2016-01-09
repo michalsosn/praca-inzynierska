@@ -1,38 +1,117 @@
-@Misc{ Oet11,
-	title = "The Not So Short Introduction to {LaTeX2e}",
-	author = "T. Oetiker",
-	year = "2011",
-	howpublished = "\url{http://tobi.oetiker.ch/lshort/lshort.pdf}"
+% Część teoretyczna
+@Book{ TAPL,
+    author = "Benjamin C. Pierce",
+    title = "Types and Programming Languages",
+    publisher = "The MIT Press",
+    year = "2002",
+    isbn = "0-262-16209-8"
 }
 
-@Misc{ texlive,
-	title = "{TeX Live}",
-	howpublished = "\url{http://www.tug.org/texlive/}"
+@Book{ Dragon,
+    author = "Aho, Lam, Sethi, Ullman",
+    title = "Compilers: Principles, Techniques, and Tools",
+    publisher = "Pearson Education, Inc",
+    year = "2006",
+    isbn = "1-292-02434-8"
 }
 
-@Misc{ kile,
-	title = "{K}ile - an Integrated {LaTeX} Environment",
-	howpublished = "\url{http://kile.sourceforge.net/}"
+@Book{ AOSA,
+    author = "Amy Brown, Greg Wilson",
+    title = "The Architecture Of Open Source Applications, Volume II",
+    publisher = "lulu.com",
+    year = "2008",
+    isbn = "1-105-57181-5"
 }
 
-@Misc{ emacs,
-	title = "{E}macs",
-	howpublished = "\url{http://www.gnu.org/software/emacs/}"
+% TODO: Rozdziały, które przeczytałem, zawierają się w TAPL. Chyba lepiej to usunąć.
+@Book{ SLPJ,
+    author = "Simon Peyton Jones",
+    title = "The Implementation of Functional Programming Languages",
+    publisher = "Prentice Hall",
+    year = "1987",
+    isbn = "0-13-453325-9"
 }
 
-@Misc{ github,
-	title = "{G}it{H}ub",
-	howpublished = "\url{http://www.github.com}"
+@Book { LearnYouAHaskell,
+    author = "Miran Lipovača",
+    title = "Learn You a Haskell for Great Good!",
+    publisher = "No Starch Press",
+    year = "2011"
+    isbn = "978-1-59327-283-8"
 }
 
-@Misc{ kbibtex,
-	title = "{KBibTeX}",
-	howpublished = "\url{http://home.gna.org/kbibtex/}"
+@Book { RealWorldHaskell,
+    author = "Bryan O'Sullivan, John Goerzen, Donald Bruce Stewart",
+    title = "Real World Haskell",
+    publisher = "O'Reilly Media",
+    year = "2008"
+    isbn = "0-596-51498-0"
 }
 
-@Electronic{ Nie10,
-	title = "Szablon pracy dyplomowej",
-	author = "A. Niewiadomski",
-	year = "2010",
-	howpublished = "\url{http://ics.p.lodz.pl/~aniewiadomski/mgr/szablon-konspekt.pdf}"
+% Cenne źródła elektroniczne, lecz trudno je zacytować i zgrać na płytę
+% (zasoby są ukryte przed niezarejestrowanymi)
+% Lepiej po prostu o nich wspomnieć, a później usunąć z tej listy.
+@Misc{ CourseraAutomata,
+	title = "{Automata - Stanford University | Coursera}",
+	howpublished = "\url{https://www.coursera.org/course/automata} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ CourseraProgLang,
+	title = "{Programming Languages - University of Washington | Coursera}",
+	howpublished = "\url{https://www.coursera.org/course/proglang} (Stan na dzień: 2015-01-11)"
+}
+
+% Część techniczna
+% GHC Wiki, linki muszą prowadzić bezpośrednio do zasobów, nie wystarczy jeden do indexu
+% TODO: Skopiuj strony na płytę. > make web-sources powinno zadziałać. Uaktualnić dzień.
+@Misc{ WikiNewcomers,
+	title = "{Newcomers - GHC}",
+	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Newcomers} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ WikiFixingBugs,
+	title = "{WorkingConventions/FixingBugs - GHC}",
+	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/WorkingConventions/FixingBugs} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ WikiPhabricator,
+	title = "{Phabricator - GHC}",
+	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Phabricator} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ WikiImplementations,
+	title = "{Implementations - HaskellWiki}",
+	howpublished = "\url{https://wiki.haskell.org/Implementations} (stan na dzień: 2016-01-11)"
+}
+
+@Misc{ WikiSpecification,
+	title = "{Language and library specification - HaskellWiki}",
+	howpublished = "\url{https://wiki.haskell.org/Language_and_library_specification} (Stan na dzień: 2015-01-11)"
+}
+
+% GHC User's Guide
+@Misc{ GuideTypeFamilies,
+	title = "{Type families}",
+	howpublished = "\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-families.html} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ GuidePartialTypeSignatures,
+	title = "{Partial Type Signatures}",
+	howpublished = "\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/partial-type-signatures.html} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ GuideTypeClassExts,
+	title = "{Class and instances declarations}",
+	howpublished = "\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-class-extensions.html} (Stan na dzień: 2015-01-11)"
+}
+
+% Dokumentacje
+@Misc{ DocsHappy,
+	title = "{Chapter 2. Using Happy}",
+	howpublished = "\url{https://www.haskell.org/happy/doc/html/sec-using.html} (Stan na dzień: 2015-01-11)"
+}
+
+@Misc{ UHCUserGuide,
+	title = "{UHCUserDocumentation \textless\ Ehc \textless\ UCCS}",
+	howpublished = "\url{http://foswiki.cs.uu.nl/foswiki/Ehc/UhcUserDocumentation} (Stan na dzień: 2015-01-11)"
 }

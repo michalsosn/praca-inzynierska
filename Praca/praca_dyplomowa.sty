@@ -10,6 +10,11 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
+\usepackage{listings}
+\usepackage{tabu}
+\usepackage{tikz}
+\usepackage{todonotes}
+
 \frenchspacing
 
 % marginesy, szerokość i wysokość tekstu
@@ -48,3 +53,7 @@
 \newcommand{\note}[3]{{\color{#2} {\sc #1}: #3}}
 \newcommand\js[1]{\note{JS}{red}{#1}}
 \newcommand\comment[1]{{\color{red}{#1}}}
+
+\newcommand\foreign[1]{\emph{#1}}
+\newcommand\code[1]{\texttt{#1}}
+\newcommand\sectionex[2]{\section[#1]{#1\\{\normalsize #2}}}

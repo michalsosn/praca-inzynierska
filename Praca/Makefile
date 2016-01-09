@@ -1,15 +1,21 @@
 THESIS = szablon_pracy_dyplomowej
-SRC_FILES = 0_strona_tytulowa 1_wstep 2_teoria 3_nowa_teoria \
-            5_badania 6_podsumowanie a_latex b_cd
+SRC_FILES = 0_strona_tytulowa 1_wstep 2_teoria 3_technologie \
+            4_badania 5_podsumowanie a_cd
 STYLE = praca_dyplomowa.sty
 BIBLIOGRAPHY = bibliografia
 OTHER_FILES = Makefile korekta.sh
+WEB_SOURCES = web
 
 .PHONY: all clean zip
 
-all: $(THESIS).pdf
+all: $(THESIS).pdf web-sources
 
 zip: $(THESIS).tar.gz
+
+web-sources:
+	grep '\\url{.*}' $(BIBLIOGRAPHY).bib | sed 's/^.*\\url{\(.*\)}.*$$/\1/' | \
+	wget --page-requisites --convert-links --adjust-extension --span-hosts \
+		 --directory-prefix=$(WEB_SOURCES) --input-file=-
 
 $(THESIS).pdf: $(THESIS).tex  $(SRC_FILES:%=%.tex) $(STYLE) $(THESIS).bbl
 	pdflatex $(THESIS).tex
@@ -19,7 +25,7 @@ $(THESIS).bbl: $(BIBLIOGRAPHY).bib
 	pdflatex $(THESIS).tex
 	bibtex $(THESIS)
 
-$(THESIS).tar.gz: $(THESIS).pdf
+$(THESIS).tar.gz: $(THESIS).pdf web-sources
 	tar czf $(THESIS).tar.gz $(THESIS).pdf $(THESIS).tex \
 		$(SRC_FILES:%=%.tex) $(STYLE) $(BIBLIOGRAPHY).bib $(OTHER_FILES)
 
@@ -33,3 +39,4 @@ clean:
 	rm -rf $(THESIS).toc
 	rm -rf $(THESIS).tar.gz
 	rm -rf texput.log
+	rm -rf $(WEB_SOURCES)
