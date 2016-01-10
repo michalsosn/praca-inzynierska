@@ -16,6 +16,9 @@ Thumbs.db
 *.snm
 *.toc
 *.vrb
+*.lof
+*.lot
+*.lol
 
 Praca/web
 Praca/bledy.txt

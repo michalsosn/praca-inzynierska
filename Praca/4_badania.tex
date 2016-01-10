@@ -1,5 +1,5 @@
 \chapter{Usprawnienia Glasgow Haskell Compiler}\label{chap:badania}
-\todo[inline,size=\tiny]{Ten rozdział zawiera opis wyników uzyskanych w~ramach pracy. Jeśli praca miała
+\todo[disable,inline,size=\tiny]{Ten rozdział zawiera opis wyników uzyskanych w~ramach pracy. Jeśli praca miała
 cel badawczy należy skupić się na opisie przeprowadzonych eksperymentów oraz
 prezentacji i~analizie uzyskanych wyników. Jeśli praca nie miała na celu
 uzyskania nowatorskich wyników, należy skupić się na opisie architektury
@@ -8,10 +8,48 @@ realizacja celów postawionych w~rozdziale \ref{sec:cele_pracy}. Rozdział ten m
 bezspornie pokazywać, że cele pracy zostały zrealizowane}
 
 \sectionex{Zgłoszenie nr 10839}{Consistent pretty-printing of type families}
-\todo[inline]{Treść 1}
+
+\subsection{Wymagania}
+\todo[inline]{Treść 11}
+
+\begin{lstlisting}[caption={Listing test}]
+type family F a b
+type instance F a b = a
+
+fun :: Int -> Int
+fun a = 10 + 1
+
+-- NamedWildcardExplicitForall.hs:14:16: error:
+--    • Couldn't match expected type ‘Bool’ with actual type ‘_a’
+
+for (i = 0, i < 10; ++i) { a += 10; }
+\end{lstlisting}
+
+
+\subsection{Rozwiązanie}
+\todo[inline]{Treść 12}
+
+\subsection{Testy}
+\todo[inline]{Treść 13}
 
 \sectionex{Zgłoszenie nr 10982}{Warn about unused pattern variables in type families}
-\todo[inline]{Treść 2}
+
+\subsection{Wymagania}
+\todo[inline]{Treść 21}
+
+\subsection{Rozwiązanie}
+\todo[inline]{Treść 22}
+
+\subsection{Testy}
+\todo[inline]{Treść 23}
 
 \sectionex{Zgłoszenie nr 11098}{PartialTypeSignatures mishandles type variables that begin with an underscore}
-\todo[inline]{Treść 3}
+
+\subsection{Wymagania}
+\todo[inline]{Treść 31}
+
+\subsection{Rozwiązanie}
+\todo[inline]{Treść 32}
+
+\subsection{Testy}
+\todo[inline]{Treść 33}

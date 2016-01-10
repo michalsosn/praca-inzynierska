@@ -4,6 +4,7 @@
 \usepackage{color}
 \usepackage{url}
 \usepackage{tocbibind}
+\usepackage{hyperref}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -14,6 +15,7 @@
 \usepackage{tabu}
 \usepackage{tikz}
 \usepackage{todonotes}
+
 
 \frenchspacing
 
@@ -49,6 +51,23 @@
 \fancyfoot[C]{\thepage} % stopka: numer strony pośrodku
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0pt}}
+
+% konfiguracja pakietu listings
+\renewcommand{\lstlistingname}{Wycinek}
+\renewcommand{\lstlistlistingname}{Spis fragmentów programów}
+\lstdefinelanguage{Haskell+}{
+  language     = Haskell,
+  morekeywords = {family}
+}
+\lstset{
+  language=Haskell+,
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=false,
+  extendedchars=true,
+  inputencoding=utf8,
+  literate={ą}{{\k{a}}}1 {ć}{{\'c}}1 {ę}{{\k{e}}}1 {ł}{{\l{}}}1 {ń}{{\'n}}1 {ó}{{\'o}}1 {ś}{{\'s}}1 {ż}{{\.z}}1 {ź}{{\'z}}1 {Ą}{{\k{A}}}1 {Ć}{{\'C}}1 {Ę}{{\k{E}}}1 {Ł}{{\L{}}}1 {Ń}{{\'N}}1 {Ó}{{\'O}}1 {Ś}{{\'S}}1 {Ż}{{\.Z}}1 {Ź}{{\'Z}}1 {‘}{`}1 {’}{'}1 {•}{{\textbullet}}1
+}
 
 \newcommand{\note}[3]{{\color{#2} {\sc #1}: #3}}
 \newcommand\js[1]{\note{JS}{red}{#1}}

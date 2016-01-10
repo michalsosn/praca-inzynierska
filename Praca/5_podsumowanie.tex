@@ -1,5 +1,19 @@
-\chapter{Podsumowanie i~wnioski}\label{chap:podsumowanie}
-\todo[inline,size=\tiny]{Podsumowanie jest, obok Wstępu, najważniejszym rozdziałem pracy. Należy tutaj
+\chapter{Podsumowanie i wnioski}\label{chap:podsumowanie}
+
+\section{Dyskusja wyników}
+
+Dzięki zrealizowaniu pracy sposób wyświetlania rodzin typów w błędach, ostrzeżeniach kompilatora ujednolicone. Dodane zostało wyświetlanie prawych stron równań rodzin typów danych w sposób naśladujący składnię tych konstrukcji. Stary, oddający wewnętrzną reprezentację rodzin typów danych sposób wyświetlania został zachowany w zrzucie z etapu sprawdzania typów. 
+
+Dodane zostało także opcjonalne wyświetlanie ostrzeżeń o nieużywanych zmiennych w rodzinach typów. Zmienna uważana jest za nieużywaną jeżeli występuje we wzorcach po lewej stronie równania tylko raz i nie występuje w typie po prawej stronie. 
+
+Poprawiony został błąd z zamianą zmiennych typów zaczynających się od podkreślnika w symbole wieloznaczne w kontekstach, gdzie są one niedozwolone. Algorytm renamera został również zmieniony tak, by nie dokonywał zamiany zmiennych jawnie związanych kwantyfikatorem. Dzięki temu uaktywnienie rozszerzenia \code{NamedWildCards} nie powoduje już odrzucania programów.
+
+Wszystkie te trzy modyfikacje przeszły proces rewizji kodu w systemie Phabricator i znalazły się w repozytorium. Od tamtej pory wprowadzony kod podlegał dodatkowym modyfikacjom i refaktoringowi dokonanemu przez innych programistów. W szczególności część dotycząca \code{NamedWildCards} została od tamtego czasu w dużej części zastąpiona przez alternatywne rozwiązanie Simona Peytona Jonesa. Jednak wszystkie usprawnienia dalej są dostępne w kompilatorze. Dlatego cele pracy można zatem uznać za zrealizowane, choć oczywiście praca mogłaby obejmować więcej usprawnień. 
+
+\section{Perspektywy dalszych badań}
+System Trac na stronie GHC zawiera obecnie ponad 1600 otwartych zgłoszeń\cite{WikiTickets}. Inne prace mogą podjąć się dokonania innych usprawnień związanych z programowaniem z użyciem typów lub z inną częścią kompilatora. Złożone propozycje mają poświęcone sobie podstrony na wiki GHC, gdzie można znaleźć ich planowane funkcje, projekty, opisy przebiegu implementacji i odnośniki do prac badawczych, na których bazują. Są to na przykład propozycja dodania typów zależnych do Haskella lub wprowadzenia definiowanych przez użytkownika błędów typów. Praca mogłaby polegać również na stworzeniu nowej propozycji i zaimplementowaniu jej. Możliwości są szerokie i wiele osób zdecydowało się już poświęcić swój czas GHC.
+
+\todo[disable,inline,size=\tiny]{Podsumowanie jest, obok Wstępu, najważniejszym rozdziałem pracy. Należy tutaj
 jeszcze raz podsumować wykonane prace. Szczególny nacisk należy położyć na wkład
 własny autora i~uzyskane oryginalne rezultaty. Należy odwołać się do celów pracy
 z~rozdziału \ref{sec:cele_pracy} -- można je powtórzyć -- i~jasno wskazać, że
