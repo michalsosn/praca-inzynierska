@@ -38,6 +38,9 @@ clean:
 	rm -rf $(THESIS).out
 	rm -rf $(THESIS).pdf
 	rm -rf $(THESIS).toc
+	rm -rf $(THESIS).lof
+	rm -rf $(THESIS).lot
+	rm -rf $(THESIS).lol
 	rm -rf $(THESIS).tar.gz
 	rm -rf texput.log
 	rm -rf $(WEB_SOURCES)

@@ -12,8 +12,10 @@
 \usepackage{amssymb}
 
 \usepackage{listings}
+\usepackage{lmodern}
 \usepackage{tabu}
 \usepackage{tikz}
+\usepackage[htt]{hyphenat}
 \usepackage{todonotes}
 
 
@@ -53,15 +55,19 @@
 \renewcommand{\footrulewidth}{0pt}}
 
 % konfiguracja pakietu listings
-\renewcommand{\lstlistingname}{Wycinek}
+\renewcommand{\lstlistingname}{Fragment}
 \renewcommand{\lstlistlistingname}{Spis fragmentów programów}
-\lstdefinelanguage{Haskell+}{
+\lstdefinelanguage{HaskellGHC}{
   language     = Haskell,
   morekeywords = {family}
 }
 \lstset{
-  language=Haskell+,
+  language=HaskellGHC,
+  basicstyle=\scriptsize\ttfamily,
+  showspaces=false,
+  showstringspaces=false,
   frame=single,
+  frameround=tttt,
   breaklines=true,
   breakatwhitespace=false,
   extendedchars=true,
@@ -76,3 +82,4 @@
 \newcommand\foreign[1]{\emph{#1}}
 \newcommand\code[1]{\texttt{#1}}
 \newcommand\sectionex[2]{\section[#1]{#1\\{\normalsize #2}}}
+\newcommand\subsectionex[2]{\subsection[#1]{#1\\{\normalsize #2}}}
