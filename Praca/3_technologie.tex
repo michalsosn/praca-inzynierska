@@ -10,7 +10,7 @@ Drugim językiem wykorzystanym w GHC jest Python. Testowanie i walidacja kompila
 
 \subsection{Git}
 
-Kod GHC znajduje się w repozytorium Git i jest publicznie dostępne do pobrania. Biblioteki wykorzystywane w kompilatorze również są przechowywane w repozytoriach Gita, lecz są osobnymi projektami, dołączonymi do GHC jako submoduły. Klon oficjalneago repozytorium znajduje się również w popularnym serwisie GitHub. Prawa zapisu do repozytorium są ogarniczone\cite{WikiGettingTheSources}.
+Kod GHC znajduje się w repozytorium Git i jest publicznie dostępny do pobrania. Biblioteki wykorzystywane w kompilatorze również są przechowywane w repozytoriach Gita, lecz są osobnymi projektami, dołączonymi do GHC jako submoduły. Klon oficjalneago repozytorium znajduje się również w popularnym serwisie GitHub. Prawa zapisu do repozytorium są ograniczone\cite{WikiGettingTheSources}.
 
 Krokiem wymaganym do rozpoczęcia pracy było sklonowanie repozytorium i lokalne zbudowanie kompilatora ze źródeł. Po lokalnej edycji plików zmiany musiały zostać zapisane w repozytorium i opatrzone komentarzem stosującym się do konwencji opisanej na wiki GHC, zanim mogły zostać wysłane z użyciem systemu Phabricator.
 
@@ -49,7 +49,7 @@ Na rysunku \ref{fig:Phabricator_summary} widać opis jednego z ulepszeń dokonan
     \label{fig:Phabricator_validate}
 \end{figure}
 
-Z chwilą wysłania proponowanych zmian w kodzie do Phabricatora, wykonane zostaje również automatyczne zbudowanie i przetestowanie nowej wersji GHC przez moduł Harbormaster na przeznaczonym do tego serwerze. Jezeli walidacja wykryje błędy, jest to znak, iż konieczne są poprawki i oszczędza to czas poświęcony na inspekcję kodu przez programistów. Na rysunku \ref{fig:Phabricator_validate} widać raport z Harbormastera do jednego z wprowadzonych w tej pracy usprawnień, w którym nie wykryto problemów.
+Z chwilą wysłania proponowanych zmian w kodzie do Phabricatora, wykonane zostaje również automatyczne zbudowanie i przetestowanie nowej wersji GHC przez moduł Harbormaster na przeznaczonym do tego serwerze. Jeżeli walidacja wykryje błędy, jest to znak, iż konieczne są poprawki i oszczędza to czas poświęcony na inspekcję kodu przez programistów. Na rysunku \ref{fig:Phabricator_validate} widać raport z Harbormastera do jednego z wprowadzonych w tej pracy usprawnień, w którym nie wykryto problemów.
 
 Jak wspomniane zostało w sekcji \ref{sec:jezyk_programowania}, GHC jest budowany z użyciem innej wersji GHC. Aby zapewnić stabilność, istnieje wymaganie, że nowa wersja kompilatora musi być możliwa do skompilowania z wykorzystaniem jednej z dwóch poprzednich stabilnych wersji\cite{WikiFixingBugs}. Sam proces budowania przebiega wieloetapowo. Najpierw, z użyciem starszej wersji kompilatora, budowane są biblioteki, zależności GHC. Następnie kompilowany w ten sposób jest sam GHC, czego rezultatem jest kompilator w nowszej wersji. Następnie te dwa kroki, budowania bibliotek i kompilacji GHC, są powtarzane, lecz z wykorzystaniem nowego kompilatora i to on jest uznawany za wynik całego procesu\cite{WikiBuildSystem}. Dzięki temu sposobowi działania, usprawnienia w kompilacji są od razu zastosowane do kompilatora, przy jednym etapie wykorzystywane byłyby optymalizacje i sposób generowania kodu ze starszej wersji. Stanowi to również dobry test nowej wersji, gdyż jeżeli pojawiły się w niej nowe błędy, to jest duża szansa, iż ujawnią się one w czasie budowania kompilatora na drugim etapie.
 

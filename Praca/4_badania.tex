@@ -72,7 +72,7 @@ Po zapoznaniu się z kod GHC, udało się odnaleźć miejsca odpowiadające za k
 
 Dokonano usprawnienia, które polegało na zrefaktorowaniu kodu i wydzieleniu części wspólnej do osobnej funkcji \code{ppr\_co\_ax\_branch}. Została ona napisana tak, by wyświetlać wszystkie informacje, które wydobywały zastąpione funkcje. W komunikacie znajduje się zatem jawny kwantyfikator, wyświetlany tylko przy kompilacji z odpowiednią flagą lub jeżeli rodzina typów wykorzystuje polimorfizm na poziomie rodzajów jak w przykładzie \ref{lst:consistent_injectivity_before}, obie strony równania i miejsce wystąpienia w kodzie kompilowanego programu.
 
-W trakcie pracy okazało sie, że rodziny typów danych wymagają innego sposobu wyświetlania prawej strony równania. Jest tak, gdyż ich reprezentacja na etapie sprawdzania typów zawiera wygenerowany przez kompilator konstruktor typu, o którym użytkownik może nie wiedzieć. Z tego powodu \code{pprCoAxBranch} używa funkcji \code{pprDataCons}, która wydobywa z tego wewnętrznego konstruktora typu konstruktory wartości i odtwarza prawą stronę równania taką, jaką podał użytkownik. Przykład działania widoczny jest we fragmencie \ref{lst:consistent_datafams_after}. Wcześniej prawa strona nie była wcale w tym przypadku wcale wyświetlana, co widać na wycinku \ref{lst:consistent_datafams_before}.
+W trakcie pracy okazało się, że rodziny typów danych wymagają innego sposobu wyświetlania prawej strony równania. Jest tak, gdyż ich reprezentacja na etapie sprawdzania typów zawiera wygenerowany przez kompilator konstruktor typu, o którym użytkownik może nie wiedzieć. Z tego powodu \code{pprCoAxBranch} używa funkcji \code{pprDataCons}, która wydobywa z tego wewnętrznego konstruktora typu konstruktory wartości i odtwarza prawą stronę równania taką, jaką podał użytkownik. Przykład działania widoczny jest we fragmencie \ref{lst:consistent_datafams_after}. Wcześniej prawa strona nie była wcale w tym przypadku wcale wyświetlana, co widać na wycinku \ref{lst:consistent_datafams_before}.
 
 \begin{lstlisting}[numbers=left,firstnumber=13,label={lst:consistent_datafams_code},
                    caption={Fragment testu T9371 z rodziną typów danych powiązaną z klasą \code{C} i równaniami o nachodzących na siebie dziedzinach.}]
@@ -179,7 +179,7 @@ Wyświetlania ostrzeżeń dokonano przez zmiany w renamerze. Po analizie kodu ud
 
 W tym celu zastąpiona funkcja \code{extractHsTysRdrTyVars} zastąpiona została bardzo podobną \code{extractHsTysRdrTyVarsDups}, która zwraca wszystkie wystąpienia zmiennych z typu i nie usuwa wielokrotnych wystąpień tej samej nazwy. To umożliwiło sprawdzanie drugiego z warunków, kiedy zmienna jest uznawana za używaną.
 
-Do wygenrowania ostrzeżeń użyta została funkcja \code{warnUnusedMatches}, ta sama, która odpowiada za ostrzeżenia w funkcjach na poziomie termów. Gwarantuje to, że ostrzeżenia te są w tym samym formacie. Następuje w niej również odczytanie ze środowiska globalnego w monadzie renamera, czy opcja generowania ostrzeżeń została wybrana przez programistę, na przykład przez ustawienie flagi \code{-fwarn-unused-matches} lub \code{-Wall}.
+Do wygenerowania ostrzeżeń użyta została funkcja \code{warnUnusedMatches}, ta sama, która odpowiada za ostrzeżenia w funkcjach na poziomie termów. Gwarantuje to, że ostrzeżenia te są w tym samym formacie. Następuje w niej również odczytanie ze środowiska globalnego w monadzie renamera, czy opcja generowania ostrzeżeń została wybrana przez programistę, na przykład przez ustawienie flagi \code{-fwarn-unused-matches} lub \code{-Wall}.
 
 Ignorowanie zmiennych zaczynających się od podkreślnika zachodzi w \code{warnUnusedMatches} przez zwyczajne sprawdzenie pierwszego znaku nazwy. Z kolei anonimowe i nazwane symbole wieloznaczne nie wywołują ostrzeżeń, gdyż nie są kolekcjonowane w funkcji \code{extractHsTysRdrTyVarsDups}, więc wcale nie znajdują się na liście nazw.
 
@@ -214,7 +214,7 @@ UnusedTyVarWarnings.hs:11:18: warning:
     Defined but not used: type variable ‘b’
 \end{lstlisting}
 
-Dodanie nowej funkcji wymagało jeszcze uaktualnienia dokumentacji. Informacje o dodanych ostrzeżeniach zostały dodane do przewodnika użytkownika w części z opisem opcjonalnych ostrzeżeń, w części z opisem rodzin typów i dodziennika zmian,
+Dodanie nowej funkcji wymagało jeszcze uaktualnienia dokumentacji. Informacje o dodanych ostrzeżeniach zostały dodane do przewodnika użytkownika w części z opisem opcjonalnych ostrzeżeń, w części z opisem rodzin typów i do dziennika zmian,
 
 
 \sectionex{Zgłoszenie nr 11098}{PartialTypeSignatures mishandles type variables that begin with an underscore}
@@ -263,11 +263,11 @@ data instance F _a b = FCon _a _a
 -- "Wildcard '_a' not allowed in the definition of data constructor 'FCon'" (twice)
 \end{lstlisting}
 
-Jak widać z uaktywnioną opcją \code{NamedWildCards} kompilacja wielu poprawnych programów kończyła się błędem. Zmienne zaczynające się od podkreślnika są w Haskellu od dawna i nie ma powodu, by były niedouszczalne w tej sytuacji. Zgłoszenie polegało na dokonaniu takich zmian w GHC, by nie były one już źródłem błędów.
+Jak widać z uaktywnioną opcją \code{NamedWildCards} kompilacja wielu poprawnych programów kończyła się błędem. Zmienne zaczynające się od podkreślnika są w Haskellu od dawna i nie ma powodu, by były niedopuszczalne w tej sytuacji. Zgłoszenie polegało na dokonaniu takich zmian w GHC, by nie były one już źródłem błędów.
 
 \subsection{Rozwiązanie} %%%
 
-Źródłem problemów było rozwinięcie \code{tyvar} w definicji gramatyki programu Happy. Początkowo generowało ono taki parser, który w sytuacji, gdy rozszerzenie\code{NamedWildCards} jest aktywne, wszystkie zmienne zaczynające się od podkreślników parsował jako nazwane wieloznaczniki.
+Źródłem problemów było rozwinięcie \code{tyvar} w definicji gramatyki programu Happy. Początkowo generowało ono taki parser, który w sytuacji, gdy rozszerzenie \code{NamedWildCards} jest aktywne, wszystkie zmienne zaczynające się od podkreślników parsował jako nazwane wieloznaczniki.
 
 Wykorzystany pomysł na rozwiązanie problemu był taki, by parsować wszystkie identyfikatory jako zwykłe zmienne typów, a następnie zamieniać część z nich w renamerze. Rzeczywiście, w ramach pracy dokonano zmian w \code{Parser.y}, by bezwarunkowo konstruowane były \code{HsTyVar}, reprezentujące zmienne typu.
 

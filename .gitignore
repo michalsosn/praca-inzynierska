@@ -16,6 +16,8 @@ Thumbs.db
 *.snm
 *.toc
 *.vrb
+*.bbl
+*.blg
 *.lof
 *.lot
 *.lol

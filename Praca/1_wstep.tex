@@ -6,7 +6,7 @@ Wśród popularnych, statycznie typowanych języków istnieje wyraźne rozróżn
 
 Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne typy danych, promocję typów danych, zależności funkcyjne między parametrami w klasach typów i rodziny typów. Dostępne są również pomocne biblioteki, dostarczające na przykład typ danych Proxy lub pozwalające na promocję zwykłych funkcji do rodzin typów. Szczególnie istotnym rozszerzeniem są rodziny typów, gdyż umożliwiają definiowanie na poziomie typów funkcji wykorzystujących dopasowywanie wzorców oraz zależności funkcyjne, które dają równoważne możliwości, lecz wymagają stosowania stylu relacyjnego zamiast funkcyjnego. Razem zapewniają możliwości zbliżone do tych, które mają języki z typami zależnymi.
 
-Rodziny typów zostały wprowadzone do Haskella w wersji 6.10, czyli w roku 2008. Do tej pory są przedmiotem prac naukowych, a ich implementacja jest nieustannie rozwijana. Na przykład w 2015 roku wprowadzone zostały do GHC różnowartośćiowe rodziny typów. Aktywny rozwój w połączeniu z faktem, iż type-checker to największy komponent GHC\cite{AOSA} skutkują tym, iż liczba usprawnień oczekujących na wykonanie jest bardzo duża.
+Rodziny typów zostały wprowadzone do Haskella w wersji 6.10, czyli w roku 2008. Do tej pory są przedmiotem prac naukowych, a ich implementacja jest nieustannie rozwijana. Na przykład w 2015 roku wprowadzone zostały do GHC różnowartościowe rodziny typów. Aktywny rozwój w połączeniu z faktem, iż type-checker to największy komponent GHC\cite{AOSA} skutkują tym, iż liczba usprawnień oczekujących na wykonanie jest bardzo duża.
 
 Programowanie z użyciem typów możliwe jest w innych językach. Na przykład, Scala oferuje do tego \foreign{path dependent types}, a w C++ możliwe jest metaprogramowanie z użyciem szablonów. Istnieją też języki z typami zależnymi jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródłach i mogłoby służyć do realizacji tematu pracy zamiast Haskella.
 
@@ -21,14 +21,14 @@ problem w~sposób ogólny.}
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
-Celem pracy jest dokonanie jak największej liczby usprawnień w kompilatorze GHC. Do organizacji pracy nad kompilatorem wykorzystywany jest system Trac. Przez usprawnienie rozumiane są zmiany w GHC lub w powiązanych z tym projektem bibliotekach, które zostały zgłoszone w systemie Trac. Zatem usprawnienia, tak jak zgłoszenia, mogą polegać na naprawieniu błędu w działaniu kompilatora, zaimplentowaniu nowej funkcjonalności lub wykonaniu pewnego zadania.
+Celem pracy jest dokonanie jak największej liczby usprawnień w kompilatorze GHC. Do organizacji pracy nad kompilatorem wykorzystywany jest system Trac. Przez usprawnienie rozumiane są zmiany w GHC lub w powiązanych z tym projektem bibliotekach, które zostały zgłoszone w systemie Trac. Zatem usprawnienia, tak jak zgłoszenia, mogą polegać na naprawieniu błędu w działaniu kompilatora, zaimplementowaniu nowej funkcjonalności lub wykonaniu pewnego zadania.
 
-W tej pracy podjęte zostały wyłącznie usprawnienia polegające na zmianach w kodzie, w częściach związanych z roszerzeniami opisanymi w sekcji \ref{sec:wstep}. Wybrane usprawnienia to:
+W tej pracy podjęte zostały wyłącznie usprawnienia polegające na zmianach w kodzie, w częściach związanych z rozszerzeniami opisanymi powyżej. Wybrane usprawnienia to:
 
 \begin{itemize}
  \item Ujednolicenie wyświetlania rodzin typów w błędach i ostrzeżeniach kompilatora.
  \item Dodanie ostrzeżeń o nieużywanych zmiennych w rodzinach typów.
- \item Naprawienie błędu z niewłaściwym traktowaniem zmiennych zaczynających się od podkreślnika w przypadku kompilacji z rozszerzeniem \code{NamedWildCards}.
+ \item Naprawienie błędu z niewłaściwym parsowaniem zmiennych zaczynających się od podkreślnika w przypadku kompilacji z rozszerzeniem \code{NamedWildCards}.
 \end{itemize}
 
 Poprawne wprowadzenie zmiany w kodzie wymaga przejścia przez procedurę ustaloną przez osoby mające prawa zapisu do repozytorium\cite{WikiFixingBugs}. Zgodnie z nią wykonanie usprawnienia wymaga:
@@ -42,7 +42,7 @@ Poprawne wprowadzenie zmiany w kodzie wymaga przejścia przez procedurę ustalon
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
-Podstaw teorii budowy kompilatorów dostarcza \cite{Dragon}. Autorzy opisują budowę kompilatora, a następnie każdą fazę kompilacji. Ma to zastosowanie także w przypadku kompilatora GHC. Krótki opis poświęcony konkretnie GHC dostępny jest w \cite{AOSA}. Podstawy teorii typów zawarte są w \cite{TAPL}. Omówiony jest w tej pozycji nietypowany i typowany rachunek lambda i kilka jego wzbogaconych wersji. To bardzo istotne, gdyż pojęcia z rachunku lambda występują powszechnie w dokumentacji, w kodzie GHC i są powszechnie uzywane w dyskusjach przez programistów. Z drugiej strony część poświęcona podtypowaniu nie ma bezpośredniego zastosowania do GHC oraz opis nie obejmuje typów zależnych. Szczególnie warte uwagi w ramach wprowadzenia teoretycznego są również dwa kursy, dostępne za darmo na platformie Coursera: \foreign{Automata} prowadzony przez Jeffa Ullmana oraz \foreign{Programming Languages} prowadzony przez Dana Grossmana. Są to zaadoptowane do formy kursu internetowego kursy akademickie.
+Podstaw teorii budowy kompilatorów dostarcza \cite{Dragon}. Autorzy opisują budowę kompilatora, a następnie każdą fazę kompilacji. Ma to zastosowanie także w przypadku kompilatora GHC. Krótki opis poświęcony konkretnie GHC dostępny jest w \cite{AOSA}. Podstawy teorii typów zawarte są w \cite{TAPL}. Omówiony jest w tej pozycji nietypowany i typowany rachunek lambda i kilka jego wzbogaconych wersji. To bardzo istotne, gdyż pojęcia z rachunku lambda występują powszechnie w dokumentacji, w kodzie GHC i są powszechnie używane w dyskusjach przez programistów. Z drugiej strony część poświęcona podtypowaniu nie ma bezpośredniego zastosowania do GHC oraz opis nie obejmuje typów zależnych. Szczególnie warte uwagi w ramach wprowadzenia teoretycznego są również dwa kursy, dostępne za darmo na platformie Coursera: \foreign{Automata} prowadzony przez Jeffa Ullmana oraz \foreign{Programming Languages} prowadzony przez Dana Grossmana. Są to zaadoptowane do formy kursu internetowego kursy akademickie.
 
 Praca nad GHC wymaga znajomości Haskella, w którym jest tworzony kompilator. \cite{LearnYouAHaskell} i \cite{RealWorldHaskell} stanowią dobre wprowadzenie do tego języka, obie pozycje są dostępne za darmo w Internecie. Z rozszerzeniami zmienionymi w tej pracy, \code{TypeFamilies} i \code{PartialTypeSignatures} można zapoznać się w poradniku użytkownika GHC, w zasobach \cite{GuideTypeFamilies} i \cite{GuidePartialTypeSignatures}.
 
