@@ -10,16 +10,16 @@ bezspornie pokazywać, że cele pracy zostały zrealizowane}
 \sectionex{Zgłoszenie nr 10839}{Consistent pretty-printing of type families}
 \label{sec:zgloszenie_10839}
 
-Pierwszym z wykonanych w pracy usprawnień było ujednolicenie wyświetlania rodzin typów. Problem polegał na tym, iż w zależności od miejsca i rodzaju błędu, wyświetlane były one w różny sposób. Co gorsza różniły się one nie tylko formatem, ale też tym, które informacje zawierają. Widać to na poniższych wycinkach z komunikatów generowanych przez kompilator. We fragmencie \ref{lst:consistent_conflicting_before} z błędem w otwartej rodzinie typów widoczna jest lewa strona równań i wskazania, w którym miejscu w pliku się one znajdują.
+Pierwszym z wykonanych w pracy usprawnień było ujednolicenie wyświetlania rodzin typów. Problem polegał na tym, iż w zależności od miejsca i rodzaju błędu, wyświetlane były one w różny sposób. Co gorsza, różniły się one nie tylko formatem, ale też tym, które informacje zawierają. Widać to na poniższych wycinkach z komunikatów generowanych przez kompilator. We fragmencie \ref{lst:consistent_conflicting_before} z błędem w otwartej rodzinie typów widoczna jest lewa strona równań i wskazania, w którym miejscu w pliku się one znajdują.
 
-\begin{lstlisting}[numbers=left,firstnumber=4,label={lst:consistent_conflicting_code},
+\begin{lstlisting}[float,numbers=left,firstnumber=4,label={lst:consistent_conflicting_code},
                    caption={Fragment testu T7524 z dwoma równaniami otwartej rodziny typów będącymi w konflikcie.}]
 type family F (a :: k1) (b :: k2)
 type instance F a a = Int
 type instance F a b = Bool
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_conflicting_before},
+\begin{lstlisting}[float,language={},label={lst:consistent_conflicting_before},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_conflicting_code} przed wprowadzeniem zmian.}]
 T7524.hs:5:15:
     Conflicting family instance declarations:
@@ -29,7 +29,7 @@ T7524.hs:5:15:
 
 We fragmencie \ref{lst:consistent_overlapped_before} z zamkniętą rodziną typów widoczna jest zarówno lewa jak i prawa strona równania. Nie jest jednak podane miejsce wystąpienia.
 
-\begin{lstlisting}[numbers=left,firstnumber=70,label={lst:consistent_overlapped_code},
+\begin{lstlisting}[float,numbers=left,firstnumber=70,label={lst:consistent_overlapped_code},
                    caption={Fragment testu T6018 z zamkniętą rodziną typów z równaniami o nachodzących na siebie dziedzinach.}]
 -- This is similar, except that the last equation contains concrete type.  Since
 -- it is overlapped it should be dropped with a warning
@@ -39,7 +39,7 @@ type family Foo a = r | r -> a where
     Foo Bool = Bool
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_overlapped_before},
+\begin{lstlisting}[float,language={},label={lst:consistent_overlapped_before},
                    caption={Ostrzeżenie generowane przez kompilator w przypadku \ref{lst:consistent_overlapped_code} przed wprowadzeniem zmian.}]
 T6018.hs:75:5: Warning:
     Type family instance equation is overlapped:
@@ -48,14 +48,14 @@ T6018.hs:75:5: Warning:
 
 W \ref{lst:consistent_injectivity_before} wyświetlany jest kwantyfikator wiążący zmienne równania i obie strony równania, ale brak jest wcięcia, przez co równanie jest wyrównanie w pionie z resztą komunikatu i cierpi czytelność komunikatu. Brak jest również lokalizacji.
 
-\begin{lstlisting}[numbers=left,firstnumber=64,label={lst:consistent_injectivity_code},
+\begin{lstlisting}[float,numbers=left,firstnumber=64,label={lst:consistent_injectivity_code},
                    caption={Fragment testu T6018fail z równaniem rodziny typów nie spełniającej warunku różnowartościowości.}]
 -- This should fail because there is no way to determine k from the RHS
 type family Fc (a :: k) (b :: k) = r | r -> k
 type instance Fc a b = Int
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_injectivity_before},
+\begin{lstlisting}[float,language={},label={lst:consistent_injectivity_before},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_injectivity_code} przed wprowadzeniem zmian.}]
 T6018fail.hs:66:15: error:
     Type family equation violates injectivity annotation.
@@ -74,7 +74,7 @@ Dokonano usprawnienia, które polegało na zrefaktorowaniu kodu i wydzieleniu cz
 
 W trakcie pracy okazało się, że rodziny typów danych wymagają innego sposobu wyświetlania prawej strony równania. Jest tak, gdyż ich reprezentacja na etapie sprawdzania typów zawiera wygenerowany przez kompilator konstruktor typu, o którym użytkownik może nie wiedzieć. Z tego powodu \code{pprCoAxBranch} używa funkcji \code{pprDataCons}, która wydobywa z tego wewnętrznego konstruktora typu konstruktory wartości i odtwarza prawą stronę równania taką, jaką podał użytkownik. Przykład działania widoczny jest we fragmencie \ref{lst:consistent_datafams_after}. Wcześniej prawa strona nie była wcale w tym przypadku wcale wyświetlana, co widać na wycinku \ref{lst:consistent_datafams_before}.
 
-\begin{lstlisting}[numbers=left,firstnumber=13,label={lst:consistent_datafams_code},
+\begin{lstlisting}[float,numbers=left,firstnumber=13,label={lst:consistent_datafams_code},
                    caption={Fragment testu T9371 z rodziną typów danych powiązaną z klasą \code{C} i równaniami o nachodzących na siebie dziedzinach.}]
 instance {-# OVERLAPPABLE #-} Monoid x => C x where
     data D x = D1 (Either x ())
@@ -85,7 +85,7 @@ instance (Monoid x, Monoid y) => C (x, y) where
     makeD = D2 (mempty, mempty)
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_datafams_before},
+\begin{lstlisting}[float,language={},label={lst:consistent_datafams_before},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_datafams_before} przed wprowadzeniem zmian.}]
 T9371.hs:14:10:
     Conflicting family instance declarations:
@@ -93,7 +93,7 @@ T9371.hs:14:10:
       D (x, y) -- Defined at T9371.hs:18:10
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_datafams_after},
+\begin{lstlisting}[float,language={},label={lst:consistent_datafams_after},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_datafams_after} przed wprowadzeniem zmian.}]
 T9371.hs:14:10:
     Conflicting family instance declarations:
@@ -103,7 +103,8 @@ T9371.hs:14:10:
 
 Inaczej wygląda to w przypadku funkcji \code{pprCoAxiom}, która jest używana przy generowaniu zrzutu z type-checkera przy kompilacji z odpowiednią flagą. Tutaj pożądane jest wyświetlenie wewnętrznej reprezentacji i \code{pprDataCons} nie jest używana. Przykładowy efekt widać na przykładzie \ref{lst:consistent_tcdump}.
 
-\begin{lstlisting}[language={},label={lst:consistent_tcdump},caption={Fragment oczekiwanego zrzutu z type-checkera testu DataFamilyInstanceLHS z wyświetlonym równaniem rodziny typów danych.}]
+\begin{lstlisting}[float,language={},label={lst:consistent_tcdump},
+                   caption={Fragment oczekiwanego zrzutu z type-checkera testu DataFamilyInstanceLHS z wyświetlonym równaniem rodziny typów danych.}]
 COERCION AXIOMS
   axiom DataFamilyInstanceLHS.TFCo:R:SingMyKind_ ::
     Sing = DataFamilyInstanceLHS.R:SingMyKind_
@@ -116,7 +117,7 @@ Przy okazji tego zadania wprowadzony został również drobny refaktoring polega
 
 Do tego zadania nie zostały utworzone nowe testy. Jako że wprowadzona zmiana dotyczyła komunikatów o błędach, istniejące już testy pokrywały ją w wystarczającym stopniu. Dwadzieścia dziewięć testów wykazało wprowadzone przy tym zgłoszeniu zmiany i zostały uaktualnione, by oczekiwać nowych komunikatów. Fragmenty testów \ref{lst:consistent_conflicting_code}, \ref{lst:consistent_injectivity_code} i \ref{lst:consistent_overlapped_code} zaprezentowane wcześniej również wywołały inne komunikaty, które przedstawiono na wycinkach \ref{lst:consistent_conflicting_code}, \ref{lst:consistent_injectivity_code} i \ref{lst:consistent_overlapped_code}.
 
-\begin{lstlisting}[language={},label={lst:consistent_conflicting_after},
+\begin{lstlisting}[float,language={},label={lst:consistent_conflicting_after},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_conflicting_code} po wprowadzeniu zmian.}]
 T7524.hs:5:15:
     Conflicting family instance declarations:
@@ -125,14 +126,14 @@ T7524.hs:5:15:
         F a b = Bool -- Defined at T7524.hs:6:15
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_overlapped_after},
+\begin{lstlisting}[float,language={},label={lst:consistent_overlapped_after},
                    caption={Ostrzeżenie generowane przez kompilator w przypadku \ref{lst:consistent_overlapped_code} po wprowadzeniu zmian.}]
 T6018.hs:75:5: Warning:
     Type family instance equation is overlapped:
       Foo Bool = Bool -- Defined at T6018.hs:75:5
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:consistent_injectivity_after},
+\begin{lstlisting}[float,language={},label={lst:consistent_injectivity_after},
                    caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_injectivity_code} po wprowadzeniu zmian.}]
 T6018fail.hs:66:15: error:
     Type family equation violates injectivity annotation.
@@ -153,7 +154,7 @@ Zgłoszenie to polegało na dodaniu ostrzeżeń o nieużywanych zmiennych w funk
 
 Ważnym zagadnieniem okazało się zdefiniowanie, kiedy zmienna typu uważana jest za używaną. W zaimplementowanej wersji, by ostrzeżenie nie było generowane, zmienna musi występować po prawej stronie równania lub występować przynajmniej dwa razy po lewej stronie równania. Obie sytuacje są pokazane we fragmencie \ref{lst:unused_used_examples}
 
-\begin{lstlisting}[label={lst:unused_used_examples},
+\begin{lstlisting}[float,label={lst:unused_used_examples},
                    caption={Przykład funkcji na poziomie typów ze zmiennymi uznawanymi za wykorzystywane.}]
 type family X a where
   X a = a
@@ -164,7 +165,7 @@ type family Y a b where
 
 Aby ostrzeżenie nie wystąpiło, gdy zmienna jest nieużywana, należy zastąpić ją lub poprzedzić podkreślnikiem. Pokazane to zostało we fragmencie \ref{lst:unused_underscore_examples}.
 
-\begin{lstlisting}[label={lst:unused_underscore_examples},
+\begin{lstlisting}[float,label={lst:unused_underscore_examples},
                    caption={Przykład funkcji na poziomie typów ze zmiennymi zastąpionymi lub poprzedzonymi podkreślnikami.}]
 type family D a b where
   D a _b = a
@@ -177,7 +178,7 @@ type family E a b where
 
 Wyświetlania ostrzeżeń dokonano przez zmiany w renamerze. Po analizie kodu udało się stwierdzić, że funkcja \code{rnFamInstDecl} odpowiada za wszystkie rodziny typów w kodzie, otwarte, zamknięte i związane z klasą. Ponadto jest już w niej używana funkcja \code{extractHsTysRdrTyVars}, która przechodzi po typie, kolekcjonując nazwy zmiennych, by utworzyć z nich zmienne typów. Zbiór zmiennych używanych to z kolei to samo, co zbiór zmiennych wolnych w prawej stronie równania, zwracany przez funkcję \code{rnPayload}. Większość informacji potrzebnych do realizacji założeń zgłoszenia było zatem dostępnych od początku, potrzebne było pozyskanie informacji o duplikatach.
 
-W tym celu zastąpiona funkcja \code{extractHsTysRdrTyVars} zastąpiona została bardzo podobną \code{extractHsTysRdrTyVarsDups}, która zwraca wszystkie wystąpienia zmiennych z typu i nie usuwa wielokrotnych wystąpień tej samej nazwy. To umożliwiło sprawdzanie drugiego z warunków, kiedy zmienna jest uznawana za używaną.
+W tym celu zastąpiona funkcja \code{extractHsTysRdrTyVars} zastąpiona została bardzo podobną \code{extractHsTysRdrTyVarsDups}, która zwraca wszystkie wystąpienia zmiennych z typu, nie usuwając wielokrotnych wystąpień tej samej nazwy. To umożliwiło sprawdzanie drugiego z warunków, kiedy zmienna jest uznawana za używaną.
 
 Do wygenerowania ostrzeżeń użyta została funkcja \code{warnUnusedMatches}, ta sama, która odpowiada za ostrzeżenia w funkcjach na poziomie termów. Gwarantuje to, że ostrzeżenia te są w tym samym formacie. Następuje w niej również odczytanie ze środowiska globalnego w monadzie renamera, czy opcja generowania ostrzeżeń została wybrana przez programistę, na przykład przez ustawienie flagi \code{-fwarn-unused-matches} lub \code{-Wall}.
 
@@ -190,7 +191,7 @@ Zmiana wymagała przejrzenia rodzin typów w GHC oraz powiązanych bibliotekach 
 Testami sprawdzającymi działanie usprawnienia są \code{UnusedTyVarWarnings} i \code{UnusedTyVarWarningsNamedWCs}. Oba działają przez próbę kompilacji pewnego programu i sprawdzenie, czy na wyjściu kompilatora pojawiają się oczekiwane ostrzeżenia. Program ten zawiera jedenaście przykładów rodzin typów otwartych, zamkniętych lub rodzin typów danych. Spośród ich równań są przypadki zmiennych nieużywanych, używanych ze względu na wystąpienie po prawej stronie i używanych ze względu na wielokrotne wystąpienie po lewej stronie, z nazwą poprzedzoną podkreślnikiem oraz symboli wieloznacznych. Testy te różnią się od siebie tym, iż w przypadku \code{UnusedTyVarWarningsNamedWCs} kompilacja zachodzi z uaktywnionym rozszerzeniem \code{NamedWildCards}. Ma to związek ze zgłoszeniem opisanym w sekcji \ref{sec:zgloszenie_11098}
 
 Fragment \ref{lst:unused_test_code} to część jednego z opisanych testów. Z kolei fragment \ref{lst:unused_test_stderr} to ostrzeżenia, które są dla niego oczekiwane.
-\begin{lstlisting}[numbers=left,firstnumber=7,label={lst:unused_test_code},
+\begin{lstlisting}[float,numbers=left,firstnumber=7,label={lst:unused_test_code},
                    caption={Fragment testu \code{UnusedTyVarWarnings} z równaniami wywołującymi ostrzeżenia lub zawierającymi zmienne poprzedzone podkreślnikiem.}]
 type family C a b where
   C a b = a                 -- should warn
@@ -205,7 +206,7 @@ type family D2 a b
 type instance D2 a _b = a   -- should not warn
 \end{lstlisting}
 
-\begin{lstlisting}[language={},label={lst:unused_test_stderr},
+\begin{lstlisting}[float,language={},label={lst:unused_test_stderr},
                    caption={Ostrzeżenia generowany przez kompilator dla fragmentu \ref{lst:unused_test_code} po wprowadzeniu zmian.}]
 UnusedTyVarWarnings.hs:8:5: warning:
     Defined but not used: type variable ‘b’
@@ -222,9 +223,9 @@ Dodanie nowej funkcji wymagało jeszcze uaktualnienia dokumentacji. Informacje o
 
 W tym zgłoszeniu konieczne było naprawienie błędu związanego z rozszerzeniem \code{NamedWildCards}. Problem ten napotkany został w czasie pracy nad zgłoszeniem nr 10982 opisanym w sekcji \ref{sec:zgloszenie_10982}, gdy zbadano jak uaktywnienie tego rozszerzenia wpływa na nazwane symbole wieloznaczne w rodzinach typów. Stąd został wybrany po tamtym zgłoszeniu.
 
-Opis błędu początkowo skupiał się na przypadku, w którym zmienna typu z nazwą zaczynającą się od podkreślnika, lecz związana jawnie kwantyfikatorem, była mimo to traktowana jako nazwany symbol wieloznaczny. Przypadek ten został pokazany na wycinku \ref{lst:namedwcs_explicit_forall}. Problem okazał się jednak wpływać na więcej programów. Uaktywnienie \code{NamedWildCards} powodowało błędy kompilacji, gdy zmienna typu zaczynająca się od podkreślnika znalazła się w poza sygnaturą typu. Znaczenie symboli wieloznacznych w sygnaturach jest dobrze określone w specyfikacji \code{PartialTypeSignatures}, lecz nie są one oczekiwane poza nimi. Przykładowy kod demonstrujący błędy w różnych konstekstach znajduje się we fragmencie \ref{lst:namedwcs_not_allowed}.
+Opis błędu początkowo skupiał się na przypadku, w którym zmienna typu z nazwą zaczynającą się od podkreślnika, lecz związana jawnie kwantyfikatorem, była mimo to traktowana jako nazwany symbol wieloznaczny. Przypadek ten został pokazany na wycinku \ref{lst:namedwcs_explicit_forall}. Problem okazał się jednak wpływać na więcej programów. Uaktywnienie \code{NamedWildCards} powodowało błędy kompilacji, gdy zmienna typu zaczynająca się od podkreślnika znalazła się poza sygnaturą typu, na przykład w deklaracji synonimu typu, typu danych, klasy czy rodziny typów. Znaczenie symboli wieloznacznych w sygnaturach jest dobrze określone w specyfikacji \code{PartialTypeSignatures}, lecz nie są one oczekiwane poza nimi. Przykładowy kod demonstrujący błędy w różnych kontekstach znajduje się we fragmencie \ref{lst:namedwcs_not_allowed}.
 
-\begin{lstlisting}[numbers=left,firstnumber=13,label={lst:namedwcs_explicit_forall},
+\begin{lstlisting}[float,numbers=left,firstnumber=13,label={lst:namedwcs_explicit_forall},
                    caption={Fragment testu \code{NamedWildcardExplicitForall} sprawdzającego, czy zmienne związane kwantyfikatorem nie zostają zamienione w wieloznaczniki.}]
 baz :: forall _a . _a -> _b -> (_a, _b)    -- _a is a variable, _b is a wildcard
 baz x y = (not x, not y)
@@ -233,7 +234,7 @@ qux :: _a -> (forall _a . _a -> _a) -> _a  -- the _a bound by forall is a tyvar
 qux x f = let _ = f 7 in not x             -- the other _a are wildcards
 \end{lstlisting}
 
-\begin{lstlisting}[label={lst:namedwcs_not_allowed},
+\begin{lstlisting}[float,label={lst:namedwcs_not_allowed},
                    caption={Deklaracje, w których kompilacja kończyła się błędem, przy aktywnym rozszerzeniu \code{NamedWildCards}.}]
 type Synonym _a = _a -> _a
 -- "Unexpected type '_a' In the type declaration for 'Synonym'"
@@ -273,9 +274,9 @@ Wykorzystany pomysł na rozwiązanie problemu był taki, by parsować wszystkie 
 
 Do rekordu \code{LocalRdrEnv} przekazywanego w monadzie renamera dodane zostało pole \code{lre\_nwcs}, będące zbiorem nazw zmiennych, które powinny zostać zastąpione przez symbole wieloznaczne. Rozwiązanie problemu z fragmentu \ref{lst:namedwcs_not_allowed} uzyskano poprzez kontrolę, kiedy ten zbiór ma być wypełniany. Umieszczane są w nim bowiem na wolne zmienne zaczynające sie od podkreślnika, lecz wyłącznie w funkcjach, które operują na typie \code{LHsSigWcType}. Tym bowiem cechują się funkcje, którymi dokonywane jest zastępowanie nazw w kontekstach dopuszczających nazwane symbole wieloznaczne. Do tego zbiór pozostaje pusty, gdy opcja \code{NamedWildCards} jest nieaktywna.
 
-Zbiór ten jest wykorzystywany w funkcjach \code{rnWcSigTy} i \code{rnHsTyKi}, w wariantach oczekujących argumentów o wartości \code{HsForAllTy}, czyli reprezentujących jawne kwantyfikatory. Podczas zastępowania nazw w ciele kwantyfikatora, nazwy związane nim są usunięte ze zbioru \code{lre\_nwcs}. Nie są one zamieniane w wieloznaczniki, co rozwiązuje problem z fragmentu \ref{lst:namedwcs_explicit_forall}.
+Zbiór ten jest modyfikowany w funkcjach \code{rnWcSigTy} i \code{rnHsTyKi}, w wariantach oczekujących argumentów o wartości \code{HsForAllTy}, czyli reprezentujących jawne kwantyfikatory. Podczas zastępowania nazw w ciele kwantyfikatora, nazwy związane nim są usunięte ze zbioru \code{lre\_nwcs}. Nie są one zamieniane w wieloznaczniki, co rozwiązuje problem z fragmentu \ref{lst:namedwcs_explicit_forall}.
 
-Zbiór ten jest wykorzystywany w wariancie funkcji \code{rnHsTyKi} przyjmującym argument \code{HsTyVar}. Do zamiany zmiennej typu na wielznacznik dochodzi, gdy nazwa zmiennej zostanie w nim odnaleziona. W przeciwnym razie argument traktowany jest jako zwykła zmienna.
+\code{lre\_nwcs} jest wykorzystywany w wariancie funkcji \code{rnHsTyKi} przyjmującym argument \code{HsTyVar}. Do zamiany zmiennej typu na wielznacznik dochodzi, gdy nazwa zmiennej zostanie w nim odnaleziona. W przeciwnym razie argument traktowany jest jako zwykła zmienna.
 
 \subsection{Testy} %%%
 

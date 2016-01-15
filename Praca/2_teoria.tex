@@ -1,37 +1,224 @@
 \chapter{Część teoretyczna}\label{chap:teoria}
 
-\todo[inline]{Ten rozdział powinien zawierać teorię z~której autor będzie korzystał w~dalszej
+\todo[disable,inline]{Ten rozdział powinien zawierać teorię z~której autor będzie korzystał w~dalszej
 części pracy.  Podstawowym celem istnieniem tego rozdziału jest umożliwienie
 czytelnikowi zrozumienie teorii rozwijanej w pracy oraz osiągniętych wyników
 praktycznych.  Jeżeli jakieś informacje nie są niezbędne do zrozumienia
 osiągnięć autora nie należy o nich pisać.}
 
-\section{Architektura Glasgow Haskell Compiler}
+\section{Budowa kompilatora}\label{sec:budowa_kompilatora}
 
-\todo[inline]{Treść. Kompilator. Rysunek z AOSA. Frontend i backend.}
+Kompilator to program, który przyjmuje na wejściu reprezentację programu w pewnym języku źródłowym i zwraca na wyjściu równoważny program w innym języku. Językiem docelowym często bywa kod wykonywalny, bajtkod, ale może to być też na przykład C lub JavaScript. Pod względem architektury w kompilatorach można wyróżnić \foreign{frontend}, dokonujący przetworzenia programu wejściowego i \foreign{backend}, generujący kod docelowy. Podział ten umożliwia utrzymywanie wielu \foreign{frontendów} i \foreign{backendów}, na przykład w GHC dostępne są trzy \foreign{backendy}, generujące kod maszynowy, kod w języku pośrednim LLVM lub kod w C\cite{AOSA}. GHC może być uruchomiony w trybie interaktywnym, jako interpreter GHCi.
+
+\foreign{Frontend} odpowiada za zanalizowanie tekstu otrzymanego na wejściu zgodnie z gramatyką języka, zbudowanie z niego drzewa składniowego i przeprowadzenie statycznej kontroli typów. W razie błędów konieczne jest wyświetlenie użytkownikowi wiadomości z opisem wystarczającym do jego zrozumienia. Następnie następuje faza generowania kodu pośredniego. Język, w którym program pisze użytkownik ma zwykle rozbudowaną składnię i jest zaprojektowany z myślą o łatwym użytkowaniu przez ludzi. Języki pośrednie są z kolei możliwie uproszczone pod względem składni i zaprojektowane z myślą o dalszym przetwarzaniu przez kompilator. Kod ten przekazywany jest do \foreign{backendu}, gdzie wykonywane są na nim optymalizacje. Możliwe jest, że ostatnie dwie fazy powtórzą się wielokrotnie, czyli program przejdzie przez kilka języków pośrednich i faz optymalizacji. Na koniec następuje wygenerowanie kodu w języku docelowym\cite{Dragon}.
+
+Glasgow Haskell Compiler ma budowę wpisującą się w ten krótki, ogólny opis. Na schemacie \ref{fig:AOSA_compiler} można odnaleźć wymienione wcześniej fazy. W tej pracy dokonano modyfikacji we \foreign{frontendzie}, dlatego poświęcono mu więcej uwagi.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/AOSA_compiler}
+    \includegraphics[width=0.7\textwidth]{images/AOSA_compiler}
     \caption[Schemat Glasgow Haskell Compiler]{Schemat Glasgow Haskell Compiler\cite{AOSA}}
     \label{fig:AOSA_compiler}
 \end{figure}
 
-\subsection{Parser}
-\todo[inline]{Treść, raczej pod kątem zgłoszenia z \code{NamedWildCards}}
+\subsection{Parser}\label{sec:parser}
+Parsowanie w GHC dzieli się na etapy analizy leksylanej i składniowej. Jest to proces tak dobrze opracowany od strony algorytmicznej, że istnieją narzędzia, które pozwalają na generowanie gotowych lekserów i parserów z opisu gramatyki.
 
-\subsection{Renamer}
-\todo[inline]{Treść, pod \code{-fwarn-unused-matches} i \code{NamedWildCards}.}
+W czasie analizy leksykalnej plik na wejściu jest skanowany i wyodrębniane są z niego ciągi znaków tzw. leksemy. Gramatyka leksykalna jest definiowana w postaci szeregu wyrażeń regularnych odpowiadających kolejnym leksemom. Lekser wczytuje kolejne znaki, dopasowując je do wyrażeń regularnych póki jest to możliwe. Po udanym dopasowaniu zwraca strukturę danych reprezentującą dany leksem, czyli token. Proces ten jest kontynuowany do przetworzenia całego wejścia, co generuje strumień tokenów.
 
-\subsection{Type checker}
-\todo[inline]{Treść, pod pierwsze zgłoszenie?}
+W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. Na przykładzie \ref{lst:alex_example} pokazane są fragmenty tego pliku. Na początku widoczne są makra, za którymi stoją wyrażenia regularne. Na końcu fragmentu pokazane jest kilka reguł z tymi makrami po lewej stronie i wyrażeniami, które mają zostać zwrócone po dopasowaniu do danego wyrażęnia regularnego. Znajdujące się tam \code{idtoken}, \code{varid} itd. to zwykłe funkcje w Haskellu, zdefiniowane w innym miejscu, które zwracają tokeny\cite{DocsAlex}.
 
-\section{Rozszerzenia GHC}
+\begin{lstlisting}[float,label={lst:alex_example},
+                   caption={Wycinki z pliku \code{Lexer.x} składające się na reguły opisujące co jest wyodrębniane jako zmienna i konstruktor.}]
+$unilarge  = \x01 -- Trick Alex into handling Unicode. See alexGetByte.
+$asclarge  = [A-Z]
+$large     = [$asclarge $unilarge]
 
-\todo[inline]{Standard Haskell. Liczba rozszerzeń. Było to już we wstępie.}
+$unismall  = \x02 -- Trick Alex into handling Unicode. See alexGetByte.
+$ascsmall  = [a-z]
+$small     = [$ascsmall $unismall \_]
 
-\subsectionex{Rodziny typów}{Rozszerzenie \code{TypeFamilies}}
-\todo[inline]{Treść zaczerpnięta z UsersGuide\cite{GuideTypeFamilies}. Pamiętać o \code{data family}}
+$ascdigit  = 0-9
+$unidigit  = \x03 -- Trick Alex into handling Unicode. See alexGetByte.
+$digit     = [$ascdigit $unidigit]
 
-\subsectionex{Częściowe sygnatury typów}{Rozszerzenie \code{PartialTypeSignatures}}
-\todo[inline]{Treść zaczerpnięta z UsersGuide\cite{GuidePartialTypeSignatures}. Pamiętać o \code{NamedWildCards}}
+$digit     = [$ascdigit $unidigit]
+$suffix    = \x07 -- Trick Alex into handling Unicode. See alexGetByte.
+$idchar    = [$small $large $digit $suffix \']
+
+@varid     = $small $idchar*          -- variable identifiers
+@conid     = $large $idchar*          -- constructor identifiers
+
+@qual = (@conid \.)+
+@qvarid = @qual @varid
+@qconid = @qual @conid
+
+haskell :-
+<0,option_prags> {
+  @qvarid                       { idtoken qvarid }
+  @qconid                       { idtoken qconid }
+  @varid                        { varid }
+  @conid                        { idtoken conid }
+}
+\end{lstlisting}
+
+W czase analizy składniowej strumień tokenów zamieniany jest w bardziej złożoną strukturę, drzewo składniowe. W GHC parser, tak jak lekser, został wygenerowany automatycznie przy użyciu narzędzia Happy. Definicja gramatyki dla Happy znajduje się w pliku \code{Parser.y}. Jest podana w notacji Backusa-Naura wzbogaconej, podobnie jak w Alex, o fragmenty kodu w Haskellu wywoływane do zbudowania struktury danej reprezentującej to drzewo\cite{DocsHappy}. Przykład \ref{lst:happy_example} pokazuje wybrane produkcje z tego pliku, wykorzystujące przy tym token \code{ITvarid} zwracany przez funkcję \code{varid} z przykładu \ref{lst:alex_example}.
+
+\begin{lstlisting}[float,label={lst:happy_example},
+                   caption={Wycinki z pliku \code{Parser.y} z produkcjami odpowiadającymi za zmienne typów, wykorzystujące tokeny, których dotyczył przykład \ref{lst:alex_example}.}]
+%token
+ VARID          { L _ (ITvarid    _) }          -- identifiers
+ CONID          { L _ (ITconid    _) }
+
+tyvar   :: { Located RdrName }
+tyvar   : tyvarid               { $1 }
+
+tyvarid :: { Located RdrName }
+        : VARID            { sL1 $1 $! mkUnqual tvName (getVARID $1) }
+        | special_id       { sL1 $1 $! mkUnqual tvName (unLoc $1) }
+        | 'unsafe'         { sL1 $1 $! mkUnqual tvName (fsLit "unsafe") }
+        | 'safe'           { sL1 $1 $! mkUnqual tvName (fsLit "safe") }
+        | 'interruptible'  { sL1 $1 $! mkUnqual tvName (fsLit "interruptible") }
+\end{lstlisting}
+
+\subsection{Renamer}\label{sec:renamer}
+
+W Haskellu, jak w wielu innych językach, może istnieć wiele funkcji, zmiennych, typów danych, klas, itd. o tej samej nazwie, na przykład w różnych plikach albo przez występowanie w lokalnym zakresie w wyrażeniu \code{let} lub \code{where}. Z tego powodu później ten sam identyfikator może odnosić się do różnych rzeczy w zależności od jego miejsca wystąpienia i tego, co w tym miejscu jest widoczne w zakresie. Kompilator, w części zwanej renamerem. decyduje, do której definicji odnosi się każde wystąpienie jakiejś nazwy.
+
+Każda osobna definicja otrzymuje na tym etapie unikalną, wewnętrzną nazwę. Następnie nazwy w programie są zamieniane na odniesienia do jednej z tych zmiennych. Utrzymywany jest w tym celu słownik nazw znajdujących się w danej chwili w zakresie. Jeżeli w danym miejscu nie da się na podstawie zawartości słownika jednoznacznie określić, do czego odnosi się pewne wystąpienie nazwy, to wywoływany jest błąd jak w przykładzie \ref{lst:renamer_ambiguous}. W algorytmie brane jest przy tym pod uwagę, czy nazwa jest kwalifikowana i w jaki sposób importowany jest inny moduł, co może usunąć wieloznaczność. Możliwe jest również zjawisko zwane \foreign{shadowingiem}, polegające na zastąpieniu w zakresie nazw innych konstrukcji przez lokalną definicję, które widać na fragmencie \ref{lst:renamer_shadowing}. Wreszcie, jeżeli w danym miejscu w zakresie nie będzie nic o danej nazwie, to renamer zakończy działanie z błędem, jak w przykładzie \ref{lst:renamer_missing}.
+
+\begin{lstlisting}[float,label={lst:renamer_ambiguous},
+                   caption={Przykład działania renamera - niejednoznaczne odwołanie.}]
+import Data.Maybe (isJust)
+
+isJust :: Maybe a -> Bool
+isJust Nothing = False
+isJust _ = True
+
+main :: IO ()
+main = print $ isJust (Just 0)
+
+{- Wywołuje błąd:
+renamer.hs:8:16:
+    Ambiguous occurrence ‘isJust’
+    It could refer to either ‘Main.isJust’, defined at renamer.hs:4:1
+                          or ‘Data.Maybe.isJust’,
+                             imported from ‘Data.Maybe’ at renamer.hs:1:20-25
+-}
+\end{lstlisting}
+
+\begin{lstlisting}[float,label={lst:renamer_shadowing},
+                   caption={Przykład działania renamera - shadowing.}]
+foo = 10
+
+main :: IO ()
+main = let foo = 20 in print foo
+
+-- Po uruchomieniu wypisze 20
+\end{lstlisting}
+
+\begin{lstlisting}[float,label={lst:renamer_missing},
+                   caption={Przykład działania renamera - nieodnalezienie w zakresie.}]
+main :: IO ()
+main = print bar
+
+-- Wywołuje błąd:
+-- renamer3.hs:2:14: Not in scope: ‘bar’
+\end{lstlisting}
+
+Na tym etapie kompilacji wykonywane jest również wiele pobocznych zadań, na przykład wyświetlenie ostrzeżeń, gdy pewna zmienna zostanie zdefiniowana, lecz nie będzie później użyta w wyrażeniu przy kompilacji z flagą \code{-fwarn-unused-matches}. Ta czynność jest jednym z usprawnień w tej pracy.
+
+\subsection{Type checker}\label{sec:type_checker}
+
+Warto w tym miejscu wspomnieć o podstawowychj pojęciach związanych z systemami typów. Częścią definicji języka jest jego gramatyka, która określa, jakie ciągi znaków można uznać za program w tym języku. W skład gramatyki wchodzą wyrażenia, które w wielu językach można podzielić na termy i typy.
+
+Termy pozwalają wyrażać obliczenia dzięki zdefiniowanej ich semantyce. Istnieje kilka sposobów określania semantyki jak semantyka operacyjna lub semantyka denotacyjna. Semantykę operacyjną określa się przez przez podanie reguł ewaluacji, z których wynika relacja ewaluacji. W wyniku ewaluacji term może zostać znormalizowany do jednego z termów zwanych wartościami. Jeśli nie, uznajemy go za niepoprawny lub bezsensowny\cite{TAPL} jak na przykładzie \ref{lst:types_nonsense}.
+
+\begin{lstlisting}[float,label={lst:types_nonsense},
+                   caption={Przykład bezsensownego wyrażenia w programie, z błędem GHC, który wywołuje.}]
+module Nonsense where
+
+nonsense = 10 + "a"
+
+{- Błąd kompilacji w GHC:
+[1 of 1] Compiling Nonsense         ( nonsense.hs, nonsense.o )
+
+nonsense.hs:3:15:
+    No instance for (Num [Char]) arising from a use of ‘+’
+    In the expression: 10 + "a"
+    In an equation for ‘nonsense’: nonsense = 10 + "a"
+-}
+\end{lstlisting}
+
+Typy są przyporządkowywane termom w relacji typowania wynikającej z pewnych reguł typowania. Zbiór reguł składa się na system typów. System typów służy do wykrywania niepoprawnych programów bez ewaluowania termów, często już na etapie kompilacji, a nie wykonywania. System typów jest konkluzywny lub bezpieczny, jeżeli każdy term, który ma w nim przyporządkowany typ, jest sensowny. Z kolei jest zupełny, jeżeli każdy sensowny term jest w nim otypowany. Systemy typów w popularnych językach są przeważnie konkluzywne, lecz nie zupełne. Rozszerzenia systemu typów dążą do zmniejszenia liczby poprawnych programów, które są w systemie typów nie dopuszczalne, co można określić jako zwiększenie jego ekspresywności. Rozszerzenia mogą doprowadzić do tego, że problem sprawdzenia, czy dany program jest poprawnie otypowany, stanie się nierozstrzygalny. Nie będzie wtedy możliwe stworzenie odpowiedniego algorytmu i zagwarantowanie, że proces kompilacji się zakończy. Może to być niedopuszczalne ze względu na oczekiwania użytkowników - programistów\cite{TAPL}.
+
+\begin{lstlisting}[float,label={lst:types_diverge},
+                   caption={Przykład programu, dla którego statyczne sprawdzanie typów w GHC się nie zakończy.}]
+{-# LANGUAGE TypeFamilies, UndecidableInstances #-}
+
+module Diverge where
+
+type family Diverge a where
+   Diverge a = Diverge a
+
+evil :: Diverge Int
+evil = 0
+\end{lstlisting}
+
+\todo[disable,inline]{Co do silnego typowania. Dragon: "An implementation of a language is strongly typed if a compiler guarantees that the programs it accepts will run without type errors.". TAPL: "I spent a few weeks trying to sort out the terminology of "strongly typed," "statically typed," "safe," etc., and found it amazingly difficult... The usage of these terms is so various as to render them almost useless.".}
+
+Polimorfizm to możliwość posiadania przez term więcej niż jednego przypisanego mu typu, różnego w zależności od miejsca użycia. W polimorfizmie parametrycznym uzyskuje się to przez wprowadzenie zmiennych typu, za które mogą zostać podstawione inne typy. Termy otypowane w ten sposób muszą mieć sens niezależnie od tego, jakie typy zostaną przyporządkowane zmiennym, choć np. w Haskellu istnieje możliwość wprowadzenia ograniczeń na zmienne. Typy takie mogą mieć składnię pozwalającą na zapisanie jawnego kwantyfikatora ogólnego, wiążącego zmienne w typie, zamiast pozostawiania tych zmiennych jako niezwiązanych. Polimorfizm parametryczny odpowiada kwantyfikacji ogólnej z logiki. W polimorfiźmie ad-hoc term może mieć przypisane różne typy dzięki temu, iż może mieć wiele definicji i wykorzystywać różne z nich w zależności od typu. W Haskellu ten polimorfizm jest dostępny w postaci klas typów\cite{TAPL}. W przykładzie \ref{lst:poly_parametric} funkcja \code{twice} jest polimorficzna, gdyż występuje w dwóch miejscach, raz zmienna typu \code{a} służy za \code{Bool}, a raz za \code{String}. Funkcja \code{twice'} pokazuje wspomniają jawną kwantyfikację, jest równoważna poprzedniej funkcji, gdzie zmienne w sygnaturze są niezwiązane. Z kolei w przykładzie \ref{lst:poly_adhoc} funkcja \code{foo} występuje raz jako funkcja typu \code{Bool -> Int} i raz jako \code{String -> Int}. W każdym przypadku ma inną definicję, sensowną dla wybranego wtedy typu.
+
+\begin{lstlisting}[float,label={lst:poly_parametric},
+                   caption={Przykład użycia polimorfizmu parametrycznego w Haskellu.}]
+{-# LANGUAGE ExplicitForAll #-}
+
+twice :: (a -> a) -> a -> a
+twice f = f . f
+
+twice' :: forall a . (a -> a) -> a -> a
+twice' f = f . f
+
+main :: IO ()
+main = do
+    print $ twice not True         -- True
+    print $ twice ('-':) "Hello"   -- "--Hello"
+\end{lstlisting}
+
+\begin{lstlisting}[float,label={lst:poly_adhoc},
+                   caption={Przykład użycia polimorfizmu ad-hoc w Haskellu.}]
+class C a where
+    foo :: a -> Int
+
+instance C Bool where
+    foo True = 1
+    foo _    = 0
+
+instance C [a] where
+    foo = length
+
+main :: IO ()
+main = do
+    print $ foo True      -- 1
+    print $ foo "Hello"   -- 5
+\end{lstlisting}
+
+W kompilatorze etap ten polega na sprawdzeniu, czy program jest poprawnie otypowany. Jednym z zadań type checkera jest wyświetlenie w razie błędu takich komunikatów, by pozwolić użytkownikowi zrozumieć w czym jest problem i je naprawić. Z tego powodu w czasie aż do tego etapu zachowywane są takie informacje jak lokalizacja w pliku wejściowym i identyfikatory wybrane przez użytkownika.
+
+\section{Rozszerzenia Glasgow Haskell Compiler}\label{sec:rozszerzenia_ghc}
+
+Przez rozszerzenia GHC rozumiane są zaimplementowane w nim funkcje, które nie są częścią specyfikacji języka przedstawioną w Haskell 2010 Language Report. Zliczenie linii w rezultacie wywołania \code{ghc --supported-extensions} pozwala stwierdzić, że jest ich obecnie około stu. Rozszerzenia są opcjonalne i domyślnie wyłączone. Uaktywnia się je dyrektywą języka umieszczoną na początku pliku modułu lub przez podanie odpowiednich flag wśród argumentów wywołania kompilatora. Wszystkie zmiany wykonane w tej pracy wiążą się z pewnymi rozszerzeniami, dlatego warto jest omówić.
+
+\subsectionex{Rodziny typów}{Rozszerzenie \code{TypeFamilies}}\label{sec:rodziny_typow}
+\todo[inline]{
+Treść zaczerpnięta z UsersGuide\cite{GuideTypeFamilies}. Pamiętać o \code{data family}
+
+Rodzina typów, otwarta i zamknięta, związana z klasą, rodzina typów danych, deklaracja i równanie, prawa i lewa strona równania, zmienna, \cite{LearnYouAHaskell}.
+}
+
+\subsectionex{Częściowe sygnatury typów}{Rozszerzenie \code{PartialTypeSignatures}}\label{sec:partial_sigs}
+\todo[inline]{
+Treść zaczerpnięta z UsersGuide\cite{GuidePartialTypeSignatures}. Pamiętać o \code{NamedWildCards}.
+
+Symbol wieloznaczny/wieloznacznik, podkreślnik, nazwany i anonimowy, zmienna i wieloznacznik.
+}

@@ -4,7 +4,9 @@
 
 Glasgow Haskell Compiler został napisany w języku Haskell. Wykorzystano została w projekcie technika \foreign{bootstraping}, polegająca na tym, iż kompilator rozwijany jest w języku, który kompiluje i jedną z zależności potrzebną do zbudowania GHC jest on sam. Środowiskiem wykorzystanym do edycji kodu było IntelliJ IDEA z wtyczką zapewniającą wsparcie dla języka Haskell. Wtyczka ta niestety w pełni działa tylko z projektami systemu Cabal i nie jest dostosowana do prac nad GHC. Z tego powodu środowisko nie zapewniało na przykład ciągłego raportowania błędów w kodzie lub wyszukiwania deklaracji określonego typu, choć z tych udogodnień można korzystać w innych projektach.
 
-Drugim językiem wykorzystanym w GHC jest Python. Testowanie i walidacja kompilatora są realizowane przez skrypty w tym języku. Jest on wymagany również z tego powodu, że do stworzenia dokumentacji wykorzystane zostało narzędzie Sphinx.
+Drugim językiem wykorzystanym w GHC jest Python. Testowanie i walidacja kompilatora są realizowane przez skrypty w tym języku, więc dodając nowe testy w pracy należało się z nim zetknąć. kontakt. Jest on wymagany do zbudowania GHC również z tego powodu, że do stworzenia dokumentacji wykorzystane zostało narzędzie Sphinx wymagające interpretera.
+
+W projekcie użyty został również język C do napisania środowiska uruchomieniowego, linkowanego z każdym programem skompilowanym przez GHC. W pozostałych częściach GHC można znaleźć dyrektywy preprocesora C, który GHC może wykorzystać zanim przejdzie do kompilacji. W tej pracy jednak kontakt z nim był znikomy.
 
 \section{Narzędzia}
 
