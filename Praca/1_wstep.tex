@@ -1,29 +1,72 @@
 \chapter{Wstęp}\label{chap:wstep}
 
-Zakresem niniejszej pracy inżynierskiej jest informatyka, w szczególności tworzenie kompilatorów i systemy typów. Przedmiotem pracy jest usprawnienie programowania z użyciem typów w Glasgow Haskell Compiler.
+Zakresem niniejszej pracy inżynierskiej jest informatyka, w szczególności
+tworzenie kompilatorów i systemy typów. Przedmiotem pracy jest usprawnienie
+programowania z użyciem typów w Glasgow Haskell Compiler.
 
-Wśród popularnych, statycznie typowanych języków istnieje wyraźne rozróżnienie między poziomem typów, a poziomem termów. Zawarte w temacie pracy mechanizmy programowania z użyciem typów służą zatarciu tej granicy. Dają one programistom możliwości wyrażania logiki na poziomie typów przypominające te dostępne na poziomie termów. Gdy zostaną użyte, sprawdzenie typów w trakcie kompilacji może wymagać obliczeń w celu znalezienia typów, do których ewaluują się zapisane na poziomie typów wyrażenia. Zwiększa to precyzję, z jaką możliwe jest opisywanie zachowania programu.
+Wśród popularnych, statycznie typowanych języków istnieje wyraźne rozróżnienie
+między poziomem typów, a poziomem termów. Zawarte w temacie pracy mechanizmy
+programowania z użyciem typów służą zatarciu tej granicy. Dają one programistom
+możliwości wyrażania logiki na poziomie typów przypominające te dostępne na
+poziomie termów. Gdy zostaną użyte, sprawdzenie typów w trakcie kompilacji może
+wymagać obliczeń w celu znalezienia typów, do których ewaluują się zapisane na
+poziomie typów wyrażenia. Zwiększa to precyzję, z jaką możliwe jest opisywanie
+zachowania programu.
 
-Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne typy danych, promocję typów danych, zależności funkcyjne między parametrami w klasach typów i rodziny typów. Dostępne są również pomocne biblioteki, dostarczające na przykład typ danych Proxy lub pozwalające na promocję zwykłych funkcji do rodzin typów. Szczególnie istotnym rozszerzeniem są rodziny typów, gdyż umożliwiają definiowanie na poziomie typów funkcji wykorzystujących dopasowywanie wzorców oraz zależności funkcyjne, które dają równoważne możliwości, lecz wymagają stosowania stylu relacyjnego zamiast funkcyjnego. Razem zapewniają możliwości zbliżone do tych, które mają języki z typami zależnymi.
+Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell
+Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających
+programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne
+typy danych, promocję typów danych, zależności funkcyjne między parametrami w
+klasach typów i rodziny typów. Dostępne są również pomocne biblioteki,
+dostarczające na przykład typ danych Proxy lub pozwalające na promocję zwykłych
+funkcji do rodzin typów. Szczególnie istotnym rozszerzeniem są rodziny typów,
+gdyż umożliwiają definiowanie na poziomie typów funkcji wykorzystujących
+dopasowywanie wzorców oraz zależności funkcyjne, które dają równoważne
+możliwości, lecz wymagają stosowania stylu relacyjnego zamiast
+funkcyjnego. Razem zapewniają możliwości zbliżone do tych, które mają języki z
+typami zależnymi.
 
-Rodziny typów zostały wprowadzone do Haskella w wersji 6.10.1, czyli w roku 2008. Do tej pory są przedmiotem prac naukowych, a ich implementacja jest nieustannie rozwijana. Na przykład w 2015 roku wprowadzone zostały do GHC różnowartościowe rodziny typów. Aktywny rozwój w połączeniu z faktem, iż type checker to największy komponent GHC\cite{AOSA} skutkują tym, iż liczba usprawnień oczekujących na wykonanie jest bardzo duża.
+Rodziny typów zostały wprowadzone do Haskella w wersji 6.10.1, czyli w roku
+2008. Do tej pory są przedmiotem prac naukowych, a ich implementacja jest
+nieustannie rozwijana. Na przykład w 2015 roku wprowadzone zostały do GHC
+różnowartościowe rodziny typów. Aktywny rozwój w połączeniu z faktem, iż type
+checker to największy komponent GHC\cite{AOSA} skutkują tym, iż liczba
+usprawnień oczekujących na wykonanie jest bardzo duża.
 
-Programowanie z użyciem typów możliwe jest w innych językach. Na przykład, Scala oferuje do tego \foreign{path dependent types}, a w C++ możliwe jest metaprogramowanie z użyciem szablonów. Istnieją też języki z typami zależnymi jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródłach i mogłoby służyć do realizacji tematu pracy zamiast Haskella.
+Programowanie z użyciem typów możliwe jest w innych językach. Na przykład, Scala
+oferuje do tego \foreign{path dependent types}, a w C++ możliwe jest
+metaprogramowanie z użyciem szablonów. Istnieją też języki z typami zależnymi
+jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródłach i
+mogłoby służyć do realizacji tematu pracy zamiast Haskella.
 
-Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgode z aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i Utrecht Haskell Compiler\cite{WikiImplementations}. Porównanie repozytoriów pozwala stwierdzić, że spośród nich GHC jest bardziej rozwinięty. Różnica ta objawia się w tym, iż rozszerzenia kompilatora pozwalające na programowanie na poziomie typów jak rodziny typów istnieją wyłącznie w GHC\cite{UHCUserGuide}. Z tego powodu w pracy został wybrany ten kompilator.
+Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgode z
+aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i Utrecht
+Haskell Compiler\cite{WikiImplementations}. Porównanie repozytoriów pozwala
+stwierdzić, że spośród nich GHC jest bardziej rozwinięty. Różnica ta objawia się
+w tym, iż rozszerzenia kompilatora pozwalające na programowanie na poziomie
+typów jak rodziny typów istnieją wyłącznie w GHC\cite{UHCUserGuide}. Z tego
+powodu w pracy został wybrany ten kompilator.
 
-\todo[disable,inline]{Wstęp rozprawy powinien jasno określać tematykę i~zakres podejmowanego problemu.
-Należy wskazać dlaczego dana tematyka została podjęta. Czy rozwiązania
-istniejące w~danej dziedzinie nie są wystarczające? Czy problem można rozwiązać
-inaczej? Czy podejmowany problem jest aktywnym tematem badawczym? Przed jakimi
-wyzwaniami stoi osoba podejmująca tematykę? Na tym etapie należy zarysować
-problem w~sposób ogólny.}
+\todo[disable,inline]{Wstęp rozprawy powinien jasno określać tematykę i~zakres
+  podejmowanego problemu.  Należy wskazać dlaczego dana tematyka została
+  podjęta. Czy rozwiązania istniejące w~danej dziedzinie nie są wystarczające?
+  Czy problem można rozwiązać inaczej? Czy podejmowany problem jest aktywnym
+  tematem badawczym? Przed jakimi wyzwaniami stoi osoba podejmująca tematykę? Na
+  tym etapie należy zarysować problem w~sposób ogólny.}
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
-Celem pracy jest dokonanie jak największej liczby usprawnień w kompilatorze GHC. Do organizacji pracy nad kompilatorem wykorzystywany jest system Trac. Przez usprawnienie rozumiane są zmiany w GHC lub w powiązanych z tym projektem bibliotekach, które zostały zgłoszone w systemie Trac. Zatem usprawnienia, tak jak zgłoszenia, mogą polegać na naprawieniu błędu w działaniu kompilatora, zaimplementowaniu nowej funkcjonalności lub wykonaniu pewnego zadania.
+Celem pracy jest dokonanie jak największej liczby usprawnień w kompilatorze
+GHC. Do organizacji pracy nad kompilatorem wykorzystywany jest system
+Trac. Przez usprawnienie rozumiane są zmiany w GHC lub w powiązanych z tym
+projektem bibliotekach, które zostały zgłoszone w systemie Trac. Zatem
+usprawnienia, tak jak zgłoszenia, mogą polegać na naprawieniu błędu w działaniu
+kompilatora, zaimplementowaniu nowej funkcjonalności lub wykonaniu pewnego
+zadania.
 
-W tej pracy podjęte zostały wyłącznie usprawnienia polegające na zmianach w kodzie, w częściach związanych z rozszerzeniami opisanymi powyżej. Wybrane usprawnienia to:
+W tej pracy podjęte zostały wyłącznie usprawnienia polegające na zmianach w
+kodzie, w częściach związanych z rozszerzeniami opisanymi powyżej. Wybrane
+usprawnienia to:
 
 \begin{itemize}
  \item Ujednolicenie wyświetlania rodzin typów w błędach i ostrzeżeniach kompilatora.
@@ -31,7 +74,9 @@ W tej pracy podjęte zostały wyłącznie usprawnienia polegające na zmianach w
  \item Naprawienie błędu z niewłaściwym parsowaniem zmiennych zaczynających się od podkreślnika w przypadku kompilacji z rozszerzeniem \code{NamedWildCards}.
 \end{itemize}
 
-Poprawne wprowadzenie zmiany w kodzie wymaga przejścia przez procedurę ustaloną przez osoby mające prawa zapisu do repozytorium\cite{WikiFixingBugs}. Zgodnie z nią wykonanie usprawnienia wymaga:
+Poprawne wprowadzenie zmiany w kodzie wymaga przejścia przez procedurę ustaloną
+przez osoby mające prawa zapisu do repozytorium\cite{WikiFixingBugs}. Zgodnie z
+nią wykonanie usprawnienia wymaga:
 
 \begin{itemize}
   \item Informowania o stanie pracy w systemie Trac. Oznaczenie swojego konta jako właściciela zadania, uzupełnienie informacji na przykład o testach i powiązanych zadaniach, a na koniec oznaczenie zgłoszenia jako zrealizowanego.
@@ -42,11 +87,33 @@ Poprawne wprowadzenie zmiany w kodzie wymaga przejścia przez procedurę ustalon
 
 \section{Przegląd literatury}\label{sec:przeglad_literatury}
 
-Podstaw teorii budowy kompilatorów dostarcza \cite{Dragon}. Autorzy opisują budowę kompilatora, a następnie każdą fazę kompilacji. Ma to zastosowanie także w przypadku kompilatora GHC. Krótki opis poświęcony konkretnie GHC dostępny jest w \cite{AOSA}. Podstawy teorii typów zawarte są w \cite{TAPL}. Omówiony jest w tej pozycji nietypowany i typowany rachunek lambda i kilka jego wzbogaconych wersji. To bardzo istotne, gdyż pojęcia z rachunku lambda występują powszechnie w dokumentacji, w kodzie GHC i są powszechnie używane w dyskusjach przez programistów. Z drugiej strony część poświęcona podtypowaniu nie ma bezpośredniego zastosowania do GHC oraz opis nie obejmuje typów zależnych. Szczególnie warte uwagi w ramach wprowadzenia teoretycznego są również dwa kursy, dostępne za darmo na platformie Coursera: \foreign{Automata} prowadzony przez Jeffa Ullmana oraz \foreign{Programming Languages} prowadzony przez Dana Grossmana. Są to zaadoptowane do formy kursu internetowego kursy akademickie.
+Podstaw teorii budowy kompilatorów dostarcza \cite{Dragon}. Autorzy opisują
+budowę kompilatora, a następnie każdą fazę kompilacji. Ma to zastosowanie także
+w przypadku kompilatora GHC. Krótki opis poświęcony konkretnie GHC dostępny jest
+w \cite{AOSA}. Podstawy teorii typów zawarte są w \cite{TAPL}. Omówiony jest w
+tej pozycji nietypowany i typowany rachunek lambda i kilka jego wzbogaconych
+wersji. To bardzo istotne, gdyż pojęcia z rachunku lambda występują powszechnie
+w dokumentacji, w kodzie GHC i są powszechnie używane w dyskusjach przez
+programistów. Z drugiej strony część poświęcona podtypowaniu nie ma
+bezpośredniego zastosowania do GHC oraz opis nie obejmuje typów
+zależnych. Szczególnie warte uwagi w ramach wprowadzenia teoretycznego są
+również dwa kursy, dostępne za darmo na platformie Coursera: \foreign{Automata}
+prowadzony przez Jeffa Ullmana oraz \foreign{Programming Languages} prowadzony
+przez Dana Grossmana. Są to zaadoptowane do formy kursu internetowego kursy
+akademickie.
 
-Praca nad GHC wymaga znajomości Haskella, w którym jest tworzony kompilator. \cite{LearnYouAHaskell} i \cite{RealWorldHaskell} stanowią dobre wprowadzenie do tego języka, obie pozycje są dostępne za darmo w Internecie. Z rozszerzeniami zmienionymi w tej pracy, \code{TypeFamilies} i \code{PartialTypeSignatures} można zapoznać się w poradniku użytkownika GHC, w zasobach \cite{GuideTypeFamilies} i \cite{GuidePartialTypeSignatures}.
+Praca nad GHC wymaga znajomości Haskella, w którym jest tworzony
+kompilator. \cite{LearnYouAHaskell} i \cite{RealWorldHaskell} stanowią dobre
+wprowadzenie do tego języka, obie pozycje są dostępne za darmo w Internecie. Z
+rozszerzeniami zmienionymi w tej pracy, \code{TypeFamilies} i
+\code{PartialTypeSignatures} można zapoznać się w poradniku użytkownika GHC, w
+zasobach \cite{GuideTypeFamilies} i \cite{GuidePartialTypeSignatures}.
 
-Strona systemu Trac projektu GHC zawiera wiele zasobów pozwalających zainteresowanym programistą wdrożyć się w projekt. Jest tam między innymi opis jak pobrać i skompilować źródła GHC\cite{WikiNewcomers}, opis procedury wprowadzania zmian w kodzie\cite{WikiFixingBugs} oraz instrukcja konfiguracji i wykorzystania narzędzia Phabricator\cite{WikiPhabricator}.
+Strona systemu Trac projektu GHC zawiera wiele zasobów pozwalających
+zainteresowanym programistą wdrożyć się w projekt. Jest tam między innymi opis
+jak pobrać i skompilować źródła GHC\cite{WikiNewcomers}, opis procedury
+wprowadzania zmian w kodzie\cite{WikiFixingBugs} oraz instrukcja konfiguracji i
+wykorzystania narzędzia Phabricator\cite{WikiPhabricator}.
 
 \todo[disable,inline]{W tym podrozdziale należy szczegółowo uzasadnić dlaczego wybrany został taki
 a~nie inny temat pracy. Trzeba przede wszystkim zaprezentować aktualny stan
@@ -59,6 +126,14 @@ i~przekonanie go że \textbf{naprawdę warto zajmować się podjętym tematem}.}
 
 \section{Układ pracy}\label{sec:uklad_pracy}
 
-Rozdział \ref{chap:wstep} zawiera wprowadzenie i określenie tematu oraz celu pracy. Rozdział \ref{chap:teoria} zawiera opis teorii budowy kompilatorów i systemów typów potrzebnej związanej z tematem. Rozdział \ref{chap:technologie} opisuje technologie i narzędzia wykorzystane w pracy. W rozdziale \ref{chap:badania} przedstawiono opis dokonanych zmian w GHC. Rozdział \ref{chap:podsumowanie} zawiera podsumowanie czy założone cele zostały osiągnięte. Dodatek \ref{app:plyta} zawiera płytę CD z kodem aplikacji\todo{z patchami z moimi zmianami uzyskanymi git diffem?} i kopią tej pracy oraz wykorzystanych źródeł internetowych.
+Rozdział \ref{chap:wstep} zawiera wprowadzenie i określenie tematu oraz celu
+pracy. Rozdział \ref{chap:teoria} zawiera opis teorii budowy kompilatorów i
+systemów typów potrzebnej związanej z tematem. Rozdział \ref{chap:technologie}
+opisuje technologie i narzędzia wykorzystane w pracy. W rozdziale
+\ref{chap:badania} przedstawiono opis dokonanych zmian w GHC. Rozdział
+\ref{chap:podsumowanie} zawiera podsumowanie czy założone cele zostały
+osiągnięte. Dodatek \ref{app:plyta} zawiera płytę CD z kodem aplikacji\todo{z
+  patchami z moimi zmianami uzyskanymi git diffem?} i kopią tej pracy oraz
+wykorzystanych źródeł internetowych.
 
 \todo[disable,inline]{Tutaj należy zamieścić opis dalszej zawartości pracy.}
