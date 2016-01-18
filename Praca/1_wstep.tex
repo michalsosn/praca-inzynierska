@@ -1,28 +1,80 @@
 \chapter{Wstęp}\label{chap:wstep}
 
+\js{Na początek jedna uwaga ogólna.  Najważniejszymi rozdziałami pracy są wstęp
+  i podsumowanie - na pewno recenzent skupi się na nich.  Dlatego trzeba włożyć
+  dużo pracy w to, aby wstęp był zrozumiały.  Jest to szczególnie prawdziwe w
+  sytuacji, kiedy napisał Pan pracę na temat na którym nikt się na wydziale nie
+  zna (poza mną).  Z tego powodu będę miał dużo uwag do wstępu, aby go jak
+  najbardziej dopracować.}
+
+\js{Mam kilka uwag ogólnych po przeczytaniu pierwszego rozdziału.  O ile
+  przegląd literatury nie budzi moich zastrzeżeń, a cele pracy nie budzą
+  większych zastrzeżeń (tzn. przydałyby się drobne korekty), o tyle sam wstęp
+  jest bardzo chaotyczny i niejasny.  Ja rozumiem o co w nim chodzi, ale to
+  dlatego ze znam temat.  Ktoś kto go nie zna jest bez szans.  Trzeba go będzie
+  przepisać prawie od nowa.  Proszę zacząć od nakreślenia ogólnej struktury tego
+  podrozdziału (np. rozpocząć od opisania czego dotyczy praca - najpierw
+  ogólnie, potem bardziej szczegółowo), zaplanować jakie pojęcia trzeba wyjaśnić
+  itd. itp. i mając taki ogólny zarys napisać wstęp.  W chwili obecnej porusza
+  Pan mnóstwo tematów (często w jednym zdaniu), przy czym te tematy wydają się
+  być bez związku z tym co było powiedziane wcześniej albo z tym co jest mówione
+  później.  Jeśli wspomina Pan o typach zależnych nalezy chociaz w dwóch-trzech
+  zdaniach wyjaśnić o co chodzi.  Ponadto wskazane jest wstawienie odwołań do
+  literatury (praktycznie każde rozszerzenie systemu typów ma swój artykuł na
+  który można się powołać - wydaje mi się że moje artykuły z 2014 i 2015 mogą
+  być dobrą ściągawką) oraz linków do zasobów sieciowych (Trac GHC, Phab, itd.)}
+
 Zakresem niniejszej pracy inżynierskiej jest informatyka, w szczególności
-tworzenie kompilatorów i systemy typów. Przedmiotem pracy jest usprawnienie
+tworzenie kompilatorów i systemy typów.
+\js{Może: ``tworzenie kompilatorów dla języków funkcyjnych ze statycznymi
+  systemami typów''?}
+Przedmiotem pracy jest usprawnienie
 programowania z użyciem typów w Glasgow Haskell Compiler.
 
-Wśród popularnych, statycznie typowanych języków istnieje wyraźne rozróżnienie
-między poziomem typów, a poziomem termów. Zawarte w temacie pracy mechanizmy
-programowania z użyciem typów służą zatarciu tej granicy. Dają one programistom
-możliwości wyrażania logiki na poziomie typów przypominające te dostępne na
+Wśród popularnych
+\js{Hm... ale do popularnych statycznie typowanych języków zalicza się Java,
+C\#,... Na pewno byłbym ostrożny z nazwaniem Haskella popularnym.}
+, statycznie typowanych języków istnieje wyraźne rozróżnienie
+między poziomem typów, a poziomem termów.
+\js{Nie jestem pewien czy użyłbym po polsku określenia ``poziom termów'' -
+  obawiam się że słowo ``term'' może mieć w polskiej terminologii znaczenie
+  typowo matematyczne, nie programistyczne.  Może lepiej mówić o wyrażeniach
+  (ang. ``expressions'')?  I na pewno należy się tutaj kilka słów wyjaśniania.
+  Pan i ja wiemy co to jest poziom typów i programowanie na poziomie typów -
+  inni czytelnicy (recenzent...) prawdopodobnie nie. }
+Zawarte w temacie pracy mechanizmy
+programowania z użyciem typów służą zatarciu tej granicy.
+\js{To ostatnie zdanie jest IMO nieprawdziwe - to co znajduje się w tej pracy na
+  pewno nie służy zatarciu granicy.}
+Dają one programistom
+możliwości wyrażania logiki na poziomie typów przypominające \js{gram.} te dostępne na
 poziomie termów. Gdy zostaną użyte, sprawdzenie typów w trakcie kompilacji może
 wymagać obliczeń w celu znalezienia typów, do których ewaluują się zapisane na
-poziomie typów wyrażenia. Zwiększa to precyzję, z jaką możliwe jest opisywanie
+poziomie typów wyrażenia.
+\js{Mam problem ze zrozumieniem wcześniejszego zdania.}
+Zwiększa to precyzję, z jaką możliwe jest opisywanie
 zachowania programu.
 
 Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell
 Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających
 programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne
 typy danych, promocję typów danych, zależności funkcyjne między parametrami w
-klasach typów i rodziny typów. Dostępne są również pomocne biblioteki,
-dostarczające na przykład typ danych Proxy lub pozwalające na promocję zwykłych
+klasach typów i rodziny typów.
+\js{Warto tutaj przy każdym rozszerzeniu podać w nawiasie oryginalną, angielską
+  nazwę.  Proszę pamiętać, że polska terminologia praktycznie nie istnieje i
+  tworzy ją Pan tutaj samodzielnie. Warto tez podać odwołania do artykułów
+  opisujących te rozszerzenia}
+Dostępne są również pomocne biblioteki,
+dostarczające na przykład typ danych Proxy
+\js{Proszę formatować fragmentu kodu czcionką o stałej szerokości. Ponadto,
+  Proxy jest części biblioteki base, więc w sumie nie pisałbym o pomocnej
+  bibliotece, skoro jest to w standardzie.}
+lub pozwalające na promocję zwykłych
 funkcji do rodzin typów. Szczególnie istotnym rozszerzeniem są rodziny typów,
 gdyż umożliwiają definiowanie na poziomie typów funkcji wykorzystujących
-dopasowywanie wzorców oraz zależności funkcyjne, które dają równoważne
-możliwości, lecz wymagają stosowania stylu relacyjnego zamiast
+dopasowywanie wzorców oraz zależności funkcyjne
+\js{chyba chodzi o klasy typów z zaleznościami funkcyjnymi?  }
+, które dają równoważne możliwości, lecz wymagają stosowania stylu relacyjnego zamiast
 funkcyjnego. Razem zapewniają możliwości zbliżone do tych, które mają języki z
 typami zależnymi.
 
@@ -32,6 +84,9 @@ nieustannie rozwijana. Na przykład w 2015 roku wprowadzone zostały do GHC
 różnowartościowe rodziny typów. Aktywny rozwój w połączeniu z faktem, iż type
 checker to największy komponent GHC\cite{AOSA} skutkują tym, iż liczba
 usprawnień oczekujących na wykonanie jest bardzo duża.
+\js{Tą drugą część zdania trzeba jakoś doprecyzować, żeby było wiadomo że chodzi
+  o usprawnienia dzięki którym programowanie na poziomie typów będzie
+  wygodniejsze.}
 
 Programowanie z użyciem typów możliwe jest w innych językach. Na przykład, Scala
 oferuje do tego \foreign{path dependent types}, a w C++ możliwe jest
@@ -39,13 +94,17 @@ metaprogramowanie z użyciem szablonów. Istnieją też języki z typami zależn
 jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródłach i
 mogłoby służyć do realizacji tematu pracy zamiast Haskella.
 
+\js{Mam poczucie, że ostatni akapit nic nie wniósł. }
+
 Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgode z
 aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i Utrecht
 Haskell Compiler\cite{WikiImplementations}. Porównanie repozytoriów pozwala
 stwierdzić, że spośród nich GHC jest bardziej rozwinięty. Różnica ta objawia się
 w tym, iż rozszerzenia kompilatora pozwalające na programowanie na poziomie
 typów jak rodziny typów istnieją wyłącznie w GHC\cite{UHCUserGuide}. Z tego
-powodu w pracy został wybrany ten kompilator.
+powodu w pracy został wybrany ten kompilator. \js{Wcześniej uzasadniał Pan wybór
+kompilatora, teraz wraca Pan znowu do tego uzsadanienia.  Powinno być raz,
+a dobrze.}
 
 \todo[disable,inline]{Wstęp rozprawy powinien jasno określać tematykę i~zakres
   podejmowanego problemu.  Należy wskazać dlaczego dana tematyka została
@@ -55,6 +114,10 @@ powodu w pracy został wybrany ten kompilator.
   tym etapie należy zarysować problem w~sposób ogólny.}
 
 \section{Cele pracy}\label{sec:cele_pracy}
+
+\js{W tym paragrafie jest nieco chaosu, dyskusja nie wydaje się przebiegać w
+ sposób płynny.  Na pewno już na początku napisałbym czemu zależy nam na tych
+ usprawnieniach.}
 
 Celem pracy jest dokonanie jak największej liczby usprawnień w kompilatorze
 GHC. Do organizacji pracy nad kompilatorem wykorzystywany jest system
@@ -110,7 +173,7 @@ rozszerzeniami zmienionymi w tej pracy, \code{TypeFamilies} i
 zasobach \cite{GuideTypeFamilies} i \cite{GuidePartialTypeSignatures}.
 
 Strona systemu Trac projektu GHC zawiera wiele zasobów pozwalających
-zainteresowanym programistą wdrożyć się w projekt. Jest tam między innymi opis
+zainteresowanym programistom wdrożyć się w projekt. Jest tam między innymi opis
 jak pobrać i skompilować źródła GHC\cite{WikiNewcomers}, opis procedury
 wprowadzania zmian w kodzie\cite{WikiFixingBugs} oraz instrukcja konfiguracji i
 wykorzystania narzędzia Phabricator\cite{WikiPhabricator}.
@@ -133,7 +196,9 @@ opisuje technologie i narzędzia wykorzystane w pracy. W rozdziale
 \ref{chap:badania} przedstawiono opis dokonanych zmian w GHC. Rozdział
 \ref{chap:podsumowanie} zawiera podsumowanie czy założone cele zostały
 osiągnięte. Dodatek \ref{app:plyta} zawiera płytę CD z kodem aplikacji\todo{z
-  patchami z moimi zmianami uzyskanymi git diffem?} i kopią tej pracy oraz
+  patchami z moimi zmianami uzyskanymi git diffem?}
+\js{Może być koopia repozytorium z Pańskimi gałęziami.}
+i kopią tej pracy oraz
 wykorzystanych źródeł internetowych.
 
 \todo[disable,inline]{Tutaj należy zamieścić opis dalszej zawartości pracy.}
