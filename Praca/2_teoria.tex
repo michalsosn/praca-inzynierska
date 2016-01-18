@@ -22,11 +22,11 @@ Glasgow Haskell Compiler ma budowę wpisującą się w ten krótki, ogólny opis
 \end{figure}
 
 \subsection{Parser}\label{sec:parser}
-Parsowanie w GHC dzieli się na etapy analizy leksylanej i składniowej. Jest to proces tak dobrze opracowany od strony algorytmicznej, że istnieją narzędzia, które pozwalają na generowanie gotowych lekserów i parserów z opisu gramatyki.
+Parsowanie w GHC dzieli się na etapy analizy leksykalnej i składniowej. Jest to proces tak dobrze opracowany od strony algorytmicznej, że istnieją narzędzia, które pozwalają na generowanie gotowych lekserów i parserów z opisu gramatyki.
 
 W czasie analizy leksykalnej plik na wejściu jest skanowany i wyodrębniane są z niego ciągi znaków tzw. leksemy. Gramatyka leksykalna jest definiowana w postaci szeregu wyrażeń regularnych odpowiadających kolejnym leksemom. Lekser wczytuje kolejne znaki, dopasowując je do wyrażeń regularnych póki jest to możliwe. Po udanym dopasowaniu zwraca strukturę danych reprezentującą dany leksem, czyli token. Proces ten jest kontynuowany do przetworzenia całego wejścia, co generuje strumień tokenów.
 
-W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. Na przykładzie \ref{lst:alex_example} pokazane są fragmenty tego pliku. Na początku widoczne są makra, za którymi stoją wyrażenia regularne. Na końcu fragmentu pokazane jest kilka reguł z tymi makrami po lewej stronie i wyrażeniami, które mają zostać zwrócone po dopasowaniu do danego wyrażęnia regularnego. Znajdujące się tam \code{idtoken}, \code{varid} itd. to zwykłe funkcje w Haskellu, zdefiniowane w innym miejscu, które zwracają tokeny\cite{DocsAlex}.
+W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. Na przykładzie \ref{lst:alex_example} pokazane są fragmenty tego pliku. Na początku widoczne są makra, za którymi stoją wyrażenia regularne. Na końcu fragmentu pokazane jest kilka reguł z tymi makrami po lewej stronie i wyrażeniami, które mają zostać zwrócone po dopasowaniu do danego wyrażenia regularnego. Znajdujące się tam \code{idtoken}, \code{varid} itd. to zwykłe funkcje w Haskellu, zdefiniowane w innym miejscu, które zwracają tokeny\cite{DocsAlex}.
 
 \begin{lstlisting}[float,label={lst:alex_example},
                    caption={Wycinki z pliku \code{Lexer.x} składające się na reguły opisujące co jest wyodrębniane jako zmienna i konstruktor.}]
@@ -62,8 +62,8 @@ haskell :-
 }
 \end{lstlisting}
 
-W czase analizy składniowej strumień tokenów zamieniany jest w bardziej złożoną strukturę, drzewo składniowe. W GHC parser, tak jak lekser, został wygenerowany automatycznie przy użyciu narzędzia Happy. Definicja gramatyki dla Happy znajduje się w pliku \code{Parser.y}. Jest podana w notacji Backusa-Naura wzbogaconej, podobnie jak w Alex, o fragmenty kodu w Haskellu wywoływane do zbudowania struktury danej reprezentującej to drzewo\cite{DocsHappy}. Przykład \ref{lst:happy_example} pokazuje wybrane produkcje z tego pliku, wykorzystujące przy tym token \code{ITvarid} zwracany przez funkcję \code{varid} z przykładu \ref{lst:alex_example}.
-
+W czasie analizy składniowej strumień tokenów zamieniany jest w bardziej złożoną strukturę, drzewo składniowe. W GHC parser, tak jak lekser, został wygenerowany automatycznie przy użyciu narzędzia Happy. Definicja gramatyki dla Happy znajduje się w pliku \code{Parser.y}. Jest podana w notacji Backusa-Naura wzbogaconej, podobnie jak w Alex, o fragmenty kodu w Haskellu wywoływane do zbudowania struktury danej reprezentującej to drzewo\cite{DocsHappy}. Przykład \ref{lst:happy_example} pokazuje wybrane produkcje z tego pliku, wykorzystujące przy tym token \code{ITvarid} zwracany przez funkcję \code{varid} z przykładu \ref{lst:alex_example}.
+{
 \begin{lstlisting}[float,label={lst:happy_example},
                    caption={Wycinki z pliku \code{Parser.y} z produkcjami odpowiadającymi za zmienne typów, wykorzystujące tokeny, których dotyczył przykład \ref{lst:alex_example}.}]
 %token
@@ -167,7 +167,7 @@ evil = 0
 
 \todo[disable,inline]{Co do silnego typowania. Dragon: "An implementation of a language is strongly typed if a compiler guarantees that the programs it accepts will run without type errors.". TAPL: "I spent a few weeks trying to sort out the terminology of "strongly typed," "statically typed," "safe," etc., and found it amazingly difficult... The usage of these terms is so various as to render them almost useless.".}
 
-Polimorfizm to możliwość posiadania przez term więcej niż jednego przypisanego mu typu, różnego w zależności od miejsca użycia. W polimorfizmie parametrycznym uzyskuje się to przez wprowadzenie zmiennych typu, za które mogą zostać podstawione inne typy. Termy otypowane w ten sposób muszą mieć sens niezależnie od tego, jakie typy zostaną przyporządkowane zmiennym, choć np. w Haskellu istnieje możliwość wprowadzenia ograniczeń na zmienne. Typy takie mogą mieć składnię pozwalającą na zapisanie jawnego kwantyfikatora ogólnego, wiążącego zmienne w typie, zamiast pozostawiania tych zmiennych jako niezwiązanych. Polimorfizm parametryczny odpowiada kwantyfikacji ogólnej z logiki. W polimorfiźmie ad-hoc term może mieć przypisane różne typy dzięki temu, iż może mieć wiele definicji i wykorzystywać różne z nich w zależności od typu. W Haskellu ten polimorfizm jest dostępny w postaci klas typów\cite{TAPL}. W przykładzie \ref{lst:poly_parametric} funkcja \code{twice} jest polimorficzna, gdyż występuje w dwóch miejscach, raz zmienna typu \code{a} służy za \code{Bool}, a raz za \code{String}. Funkcja \code{twice'} pokazuje wspomniają jawną kwantyfikację, jest równoważna poprzedniej funkcji, gdzie zmienne w sygnaturze są niezwiązane. Z kolei w przykładzie \ref{lst:poly_adhoc} funkcja \code{foo} występuje raz jako funkcja typu \code{Bool -> Int} i raz jako \code{String -> Int}. W każdym przypadku ma inną definicję, sensowną dla wybranego wtedy typu.
+Polimorfizm to możliwość posiadania przez term więcej niż jednego przypisanego mu typu, różnego w zależności od miejsca użycia. W polimorfizmie parametrycznym uzyskuje się to przez wprowadzenie zmiennych typu, za które mogą zostać podstawione inne typy. Termy otypowane w ten sposób muszą mieć sens niezależnie od tego, jakie typy zostaną przyporządkowane zmiennym, choć np. w Haskellu istnieje możliwość wprowadzenia ograniczeń na zmienne. Typy takie mogą mieć składnię pozwalającą na zapisanie jawnego kwantyfikatora ogólnego, wiążącego zmienne w typie, zamiast pozostawiania tych zmiennych jako niezwiązanych. Polimorfizm parametryczny odpowiada kwantyfikacji ogólnej z logiki. W polimorfizmie ad-hoc term może mieć przypisane różne typy dzięki temu, iż może mieć wiele definicji i wykorzystywać różne z nich w zależności od typu. W Haskellu ten polimorfizm jest dostępny w postaci klas typów\cite{TAPL}. W przykładzie \ref{lst:poly_parametric} funkcja \code{twice} jest polimorficzna, gdyż występuje w dwóch miejscach, raz zmienna typu \code{a} służy za \code{Bool}, a raz za \code{String}. Funkcja \code{twice'} pokazuje wspomnianą jawną kwantyfikację, jest równoważna poprzedniej funkcji, gdzie zmienne w sygnaturze są niezwiązane. Z kolei w przykładzie \ref{lst:poly_adhoc} funkcja \code{foo} występuje raz jako funkcja typu \code{Bool -> Int} i raz jako \code{String -> Int}. W każdym przypadku ma inną definicję, sensowną dla wybranego wtedy typu.
 
 \begin{lstlisting}[float,label={lst:poly_parametric},
                    caption={Przykład użycia polimorfizmu parametrycznego w Haskellu.}]
@@ -210,15 +210,138 @@ W kompilatorze etap ten polega na sprawdzeniu, czy program jest poprawnie otypow
 Przez rozszerzenia GHC rozumiane są zaimplementowane w nim funkcje, które nie są częścią specyfikacji języka przedstawioną w Haskell 2010 Language Report. Zliczenie linii w rezultacie wywołania \code{ghc --supported-extensions} pozwala stwierdzić, że jest ich obecnie około stu. Rozszerzenia są opcjonalne i domyślnie wyłączone. Uaktywnia się je dyrektywą języka umieszczoną na początku pliku modułu lub przez podanie odpowiednich flag wśród argumentów wywołania kompilatora. Wszystkie zmiany wykonane w tej pracy wiążą się z pewnymi rozszerzeniami, dlatego warto jest omówić.
 
 \subsectionex{Rodziny typów}{Rozszerzenie \code{TypeFamilies}}\label{sec:rodziny_typow}
-\todo[inline]{
-Treść zaczerpnięta z UsersGuide\cite{GuideTypeFamilies}. Pamiętać o \code{data family}
 
-Rodzina typów, otwarta i zamknięta, związana z klasą, rodzina typów danych, deklaracja i równanie, prawa i lewa strona równania, zmienna, \cite{LearnYouAHaskell}.
-}
+W przykładzie \ref{lst:poly_adhoc} dzięki użyciu klas typów możliwe było uzależnienie definicji funkcji od typu. Rodziny typów pozwalają zrobić to samo z typami danych i synonimami typów, definiowanymi z użyciem słów kluczowych \code{data}, \code{newtype} i \code{type}.
+
+Stworzenie rodziny typów wymaga podania deklaracji rodziny oraz pewnej liczby definicji lub równań. W przypadku rodzin związanych z klasą, deklaracja znajduje się w deklaracji klasy i musi wykorzystywać parametry klasy. Może dodatkowo posiadać równanie domyślne, o takim samym znaczeniu co domyślne definicje funkcji w klasie. Równania podaje się przy definiowaniu instancji klasy. W przypadku rodzin niezależnych od klasy, deklarację tworzy się z użyciem słowa kluczowego \code{family}, a równania albo wymienia się ze słowem kluczowym \code{instance} w przypadku rodzin otwartych, albo wymienia się wszystkie w miejscu deklaracji po \code{where}. Różne sposoby tworzenia rodzin widać na przykładach \ref{lst:typefams_assoc_standalone} i \ref{lst:typefams_open_close}. Niezależnie od tego czy rodzina jest powiązana, wykorzystanie różnych definicji funkcji w zależności od typu może wymagać utworzenia klasy.
+
+Rodziny typów dzielą się na rodziny typów danych i rodziny synonimów typów. Rodziny typów danych grupują definicje \code{data} i \code{newtype}, przy czym równania pierwszego typu bez przeszód mogą mieć więcej niż jeden konstruktor wartości, tak jak przy zwykłym definiowaniu typu danych. Rodziny synonimów typów grupują równania \code{type}, więc synonimów do już istniejących typów. Rodziny synonimów określają zależność między typami - argumentami i typami po prawych stronach równania, więc nazywane są też funkcjami na poziomie typów.
+
+\begin{lstlisting}[float,label={lst:typefams_assoc_standalone},
+                   caption={Przykład pozwiązanej z klasą i niezależnej rodziny typów.}]
+{-# LANGUAGE TypeFamilies #-}
+
+module TypeFamilies where
+
+class T a where
+    data Box a
+    store :: Box a -> a -> Box a
+
+instance T Int where
+    data Box Int = BoxI0 | BoxI1 Int
+    store BoxI0 n = BoxI1 n
+    store (BoxI1 acc) n = BoxI1 $ acc + n
+
+instance T Bool where
+    data Box Bool = BoxB0 Int Int
+    store (BoxB0 ts fs) True = BoxB0 (ts + 1) fs
+    store (BoxB0 ts fs) _    = BoxB0 ts (fs + 1)
+
+
+data family Cont a
+data instance Cont Int = ContI0 | ContI1 Int
+data instance Cont Bool = ContB0 Int Int
+
+class S a where
+    put :: Cont a -> a -> Cont a
+
+instance S Int where
+    put ContI0 n = ContI1 n
+    put (ContI1 acc) n = ContI1 $ acc + n
+
+instance S Bool where
+    put (ContB0 ts fs) True = ContB0 (ts + 1) fs
+    put (ContB0 ts fs) _    = ContB0 ts (fs + 1)
+\end{lstlisting}
+
+Funkcje na poziomie typów mogą mieć postać otwartą i zamkniętą. W formie zamkniętej wszystkie równania rodziny wymienione są w miejscu jej deklaracji. Mają tę zaletę wobec rodzin otwartych, iż określone równania mogą na siebie nachodzić i w takim wypadku stosowany jest synonim, którego równanie jest pierwsze od góry. W przypadku rodzin otwartych, kolejność równań nie jest określona i mogą one być definiowane w wielu plikach, więc nachodzenie na siebie dziedzin równań powoduje błąd. Różnicę tę widać w przykładzie \ref{lst:typefams_open_close}\cite{GuideTypeFamilies}.
+
+\begin{lstlisting}[float,label={lst:typefams_open_close},
+                   caption={Przykład otwartej i zamkniętej funkcji na typach z nachodzącymi na siebie dziedzinami.}]
+{-# LANGUAGE TypeFamilies, DataKinds #-}
+
+module TypeFamilies where
+
+type family Equal a b where
+    Equal a a = True
+    Equal a b = False
+
+type family Open a b :: Bool
+type instance Open a a = True
+type instance Open a b = False
+
+{-
+families-overlapping.hs:10:15:
+    Conflicting family instance declarations:
+      Open a a -- Defined at families-overlapping.hs:10:15
+      Open a b -- Defined at families-overlapping.hs:11:15
+-}
+\end{lstlisting}
 
 \subsectionex{Częściowe sygnatury typów}{Rozszerzenie \code{PartialTypeSignatures}}\label{sec:partial_sigs}
-\todo[inline]{
-Treść zaczerpnięta z UsersGuide\cite{GuidePartialTypeSignatures}. Pamiętać o \code{NamedWildCards}.
 
-Symbol wieloznaczny/wieloznacznik, podkreślnik, nazwany i anonimowy, zmienna i wieloznacznik.
-}
+W Haskellu, podczas definiowania wyrażenia, możliwe i zwykle zgodne z dobrymi praktykami jest dopisanie sygnatury typu. Jest to jednak opcjonalne, gdyż przy braku sygnatury w czasie sprawdzania typów dojdzie do próby rekonstrukcji. Istnieje jednak również inna, pośrednia opcja: podanie niepełnej sygnatury, zawierającej tak zwane symbole wieloznaczne, zapisywane w postaci podkreślnika.
+
+Domyślnie obecność wieloznacznika wywoła błąd, w którego treści znajdzie się zrekonstruowany typ, którym można uzupełnić sygnaturę, a kompilacja zostanie przerwana. Rozszerzenie \code{PartialTypeSignatures} zmieni jednak to zachowanie, sprawiając, iż zamiast błędu wygenerowane zostaną jedynie ostrzeżenia i obecność wieloznacznika nie będzie przyczyną zakończenia działania kompilatora. Dodatkowo ostrzeżenia te można ukryć uruchamiając GHC z flagą \code{-fno-warn-partial-type-signatures}. Przykład \ref{lst:partialsigs_infer_type} demonstruje przebieg kompilacji z tym rozszerzeniem.
+
+\begin{lstlisting}[float,label={lst:partialsigs_infer_type},
+                   caption={Przykład użycia anonimowego symbolu wieloznacznego w sygnaturze typu.}]
+foo :: _ -> Bool
+foo = not
+
+{- Wywoła błąd lub ostrzeżenie:
+partial.hs:3:8:
+    Found hole ‘_’ with type: Bool
+    To use the inferred type, enable PartialTypeSignatures
+    In the type signature for ‘foo’: _ -> Bool
+-}
+\end{lstlisting}
+
+Symbol wieloznaczny może także znaleźć się wśród ograniczeń klasowych jak w przykładzie \ref{lst:partialsigs_infer_constraints}. Wtedy w błędzie lub ostrzeżeniu, generowanym na takich samych zasadach, co w poprzednim przypadku, znajdą się wywnioskowane przez kompilator zero lub więcej ograniczeń. Oprócz wieloznacznika w sygnaturze mogą znaleźć się jawnie podane ograniczenia.
+
+\begin{lstlisting}[float,label={lst:partialsigs_infer_constraints},
+                   caption={Przykład użycia anonimowego symbolu wieloznacznego w ograniczeniach typu.}]
+bar :: _ => [a] -> Bool
+bar (x:y:_) = x == y
+bar _ = False
+
+{- Wywoła błąd lub ostrzeżenie:
+partial-constr.hs:3:8:
+    Found hole ‘_’ with inferred constraints: (Eq a)
+    To use the inferred type, enable PartialTypeSignatures
+    In the type signature for ‘bar’: _ => [a] -> Bool
+-}
+\end{lstlisting}
+
+Drugim rozszerzeniem związanym z częściowymi sygnaturami jest \code{NamedWildCards}. Sprawia ono, iż identyfikatory zaczynające się od podkreślnika są również traktowane jako wieloznaczniki i są traktowane w podobny sposób do tego zaprezentowanego w \ref{lst:partialsigs_infer_type} i \ref{lst:partialsigs_infer_constraints}. Bez niego wyłącznie same podkreślniki są traktowane jako wieloznaczniki, a identyfikatory zaczynające się od podkreślników jako zwyczajne zmienne typów. Opcjonalne aktywowane wieloznaczniki określane są jako wieloznaczniki nazwane, a te opisane poprzednio jako wieloznaczniki anonimowe.
+
+Warte uwagi jest, iż nazwane wieloznaczniki to nie zmienne typów. Pokazuje to przykład \ref{lst:partialsigs_named_wcs}, gdzie po aktywowaniu rozszerzenia \code{NamedWildCards} podana sygnatura jest poprawna, z wywnioskowanym typem \code{Bool} w miejscu \code{\underscore x}. Bez tego rozszerzenia z kolei jest ona niepoprawna, gdyż \code{\underscore x} jest wtedy traktowana jako zwykła zmienna, a zatem \code{foo} jest wtedy funkcją polimorficzną, która powinna mieć sens dla każdego \code{\underscore x}, co wyraźnie nie jest prawdą dla wyrażenia \code{not \underscore x}\cite{GuidePartialTypeSignatures}.
+
+\begin{lstlisting}[float,label={lst:partialsigs_named_wcs},
+                   caption={Demonstracja różnicy między zmienną z podkreślnikiem i nazwanym wieloznacznikiem.}]
+omodule Partial where
+foo :: _x -> (Bool, _x)
+foo a = (True, not a)
+
+foo :: _ -> Bool
+foo = not
+
+{- Wywoła błąd lub ostrzeżenie:
+partial-named.hs:4:16:
+    Couldn't match expected type ‘_x’ with actual type ‘Bool’
+      ‘_x’ is a rigid type variable bound by
+           the type signature for foo :: _x -> (Bool, _x)
+           at partial-named.hs:3:8
+    Relevant bindings include
+      a :: _x (bound at partial-named.hs:4:5)
+      foo :: _x -> (Bool, _x) (bound at partial-named.hs:4:1)
+    In the expression: not a
+    In the expression: (True, not a)
+-}
+{- Z rozszerzeniem NamedWildCards:
+partial-named.hs:3:8:
+    Found hole ‘_x’ with type: Bool
+    To use the inferred type, enable PartialTypeSignatures
+    In the type signature for ‘foo’: _x -> (Bool, _x)
+-}
+\end{lstlisting}
