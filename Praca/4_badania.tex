@@ -77,7 +77,7 @@ type instance Fc a b = Int
 
 \subsection{Rozwiązanie} %%%
 
-Po zapoznaniu się z kod GHC, udało się odnaleźć miejsca odpowiadające za każdy z
+Po zapoznaniu się z kod GHC \js{gram}, udało się odnaleźć miejsca odpowiadające za każdy z
 tych komunikatów. Są to odpowiednio funkcja \code{inaccessibleCoAxBranch} dla
 \ref{lst:consistent_overlapped_before}, \code{pprCoAxBranch} w przypadku
 \ref{lst:consistent_injectivity_before} i \code{pprCoAxBranchHdr} w przypadku
@@ -85,7 +85,12 @@ tych komunikatów. Są to odpowiednio funkcja \code{inaccessibleCoAxBranch} dla
 \code{pprCoAxiom}, używaną do generowania komunikatów przy kompilacji z flagą
 \code{-ddump-types}. Wszystkie one służyły do prezentowania rodzin typów w
 komunikatach, lecz były zaimplementowane osobno. Stąd nietrudno było o
-rozbieżności.
+rozbieżności. \js{Może warto powiedzieć, że wynikało to z różnic w reprezentacji
+ otwartych i zamkniętych rodzin typów? Można poprzeć definicjami typów danych.
+ Proszę pamiętać, że to praca inżynierska i dlatego należy szczegółowo wyjaśnić
+ kwestie inżynieryjne, tzn. nie tylko czemu nowe rozwiązanie jest dobre, ale
+ skąd wynikało stare rozwiazanie.  Myślę też że mówiąc o funkcjach warto odwołać
+ się do modułów w których się znajdują.}
 
 Dokonano usprawnienia, które polegało na zrefaktorowaniu kodu i wydzieleniu
 części wspólnej do osobnej funkcji \code{ppr\underscore co\underscore
@@ -208,7 +213,10 @@ funkcjach na poziomie termów. Są one uaktywniane tą samą flagą
 Ważnym zagadnieniem okazało się zdefiniowanie, kiedy zmienna typu uważana jest
 za używaną. W zaimplementowanej wersji, by ostrzeżenie nie było generowane,
 zmienna musi występować po prawej stronie równania lub występować przynajmniej
-dwa razy po lewej stronie równania. Obie sytuacje są pokazane we fragmencie
+dwa razy po lewej stronie równania.
+\js{Proszę wyjaśnić czemu. To drugie wcale nie jest oczywiste (sami to
+  przeoczyliśmy na początku).}
+Obie sytuacje są pokazane we fragmencie
 \ref{lst:unused_used_examples}
 
 \begin{lstlisting}[float,label={lst:unused_used_examples},
@@ -249,7 +257,8 @@ W tym celu zastąpiona funkcja \code{extractHsTysRdrTyVars} zastąpiona została
 bardzo podobną \code{extractHsTysRdrTyVarsDups}, która zwraca wszystkie
 wystąpienia zmiennych z typu, nie usuwając wielokrotnych wystąpień tej samej
 nazwy. To umożliwiło sprawdzanie drugiego z warunków, kiedy zmienna jest
-uznawana za używaną.
+uznawana za używaną. \js{Chyba warto tutaj rozróżniać między prawą i lewą stroną
+  równania.  Bo przecież interesują nas powtórzenia tylko po lewej stronie.}
 
 Do wygenerowania ostrzeżeń użyta została funkcja \code{warnUnusedMatches}, ta
 sama, która odpowiada za ostrzeżenia w funkcjach na poziomie termów. Gwarantuje
@@ -259,13 +268,15 @@ ostrzeżeń została wybrana przez programistę, na przykład przez ustawienie f
 \code{-fwarn-unused-matches} lub \code{-Wall}.
 
 Ignorowanie zmiennych zaczynających się od podkreślnika zachodzi w
-\code{warnUnusedMatches} przez zwyczajne sprawdzenie pierwszego znaku nazwy. Z
-kolei anonimowe i nazwane symbole wieloznaczne nie wywołują ostrzeżeń, gdyż nie
+\code{warnUnusedMatches} przez zwyczajne sprawdzenie pierwszego znaku nazwy.
+\js{Proszę wyjasnić o co chodzi z tym ignorowaniem nazw zaczynających się od
+  podkreślnika.}
+Z kolei anonimowe i nazwane symbole wieloznaczne nie wywołują ostrzeżeń, gdyż nie
 są kolekcjonowane w funkcji \code{extractHsTysRdrTyVarsDups}, więc wcale nie
 znajdują się na liście nazw.
 
 Zmiana wymagała przejrzenia rodzin typów w GHC oraz powiązanych bibliotekach i
-uaktualnienia ich tak, by nie generowały ostrzeżeń. W przeciwnym proces
+uaktualnienia ich tak, by nie generowały ostrzeżeń. W przeciwnym \js{gram} proces
 walidacji kończyłby się błędem, gdyż został on skonfigurowany, by nie dopuszczać
 ostrzeżeń w pewnych częściach projektu. Z tego powodu konieczne było stworzenie
 niewielkiej łatki do biblioteki Hoopl, w której poprzedzono problematyczne
@@ -395,6 +406,7 @@ identyfikatory jako zwykłe zmienne typów, a następnie zamieniać część z n
 renamerze. Rzeczywiście, w ramach pracy dokonano zmian w \code{Parser.y}, by
 bezwarunkowo konstruowane były \code{HsTyVar}, reprezentujące zmienne typu.
 
+\js{Przyznam, że trudno się to czyta nie mając kodu przed oczami.}
 Do rekordu \code{LocalRdrEnv} przekazywanego w monadzie renamera dodane zostało
 pole \code{lre\underscore nwcs}, będące zbiorem nazw zmiennych, które powinny
 zostać zastąpione przez symbole wieloznaczne. Rozwiązanie problemu z fragmentu
