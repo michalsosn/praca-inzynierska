@@ -29,11 +29,11 @@ Obliczenia te wykonywane są na etapie sprawdzania typów w czasie kompilacji.
 Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell
 Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających
 programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne
-typy danych (\foreign{GADTs}), promocję typów danych (\foreign{data type promotion}),
+typy danych (\foreign{GADTs}\cite{ExtPhantomTypes}\cite{ExtGADTs}),
+promocję typów danych (\foreign{data type promotion}\cite{ExtPromotion}),
 zależności funkcyjne między parametrami w klasach typów
-(\foreign(functional dependencies in multi-parameter type classes))
-i rodziny typów (\foreign{Type families}).
-\js{Warto tez podać odwołania do artykułów opisujących te rozszerzenia}
+(\foreign(functional dependencies in multi-parameter type classes)\cite{ExtFunDeps})
+i rodziny typów (\foreign{type families}\cite{ExtAssocTyFams}\cite{ExtAssocTypesWithClass}\cite{ExtClosedTyFams})
 Biblioteka standardowa GHC dostarcza również pomocnych modułów, jak \code{Data.Type},
 \code{Data.Proxy} i \code{GHC.TypeLits} z przydatnymi typami i funkcjami na poziomie
 typów jak operatory logiczne.
@@ -128,15 +128,6 @@ zainteresowanym programistom wdrożyć się w projekt. Jest tam między innymi o
 jak pobrać i skompilować źródła GHC\cite{WikiNewcomers}, opis procedury
 wprowadzania zmian w kodzie\cite{WikiFixingBugs} oraz instrukcja konfiguracji i
 wykorzystania narzędzia Phabricator\cite{WikiPhabricator}.
-
-\todo[disable,inline]{W tym podrozdziale należy szczegółowo uzasadnić dlaczego wybrany został taki
-a~nie inny temat pracy. Trzeba przede wszystkim zaprezentować aktualny stan
-wiedzy w~danej dziedzinie. Oznacza to konieczność omówienia książek
-(ew. artykułów naukowych bądź dokumentacji technicznej) z~których będzie się
-korzystać w~trakcie rozprawy. Następnie należy wskazać -- tym razem już
-konkretnie -- co nowego zamierza się zrobić. Podstawowymi celami tego
-podrozdziału jest wprowadzenie czytelnika w~aktualny stand danej dziedziny
-i~przekonanie go że \textbf{naprawdę warto zajmować się podjętym tematem}.}
 
 \section{Układ pracy}\label{sec:uklad_pracy}
 

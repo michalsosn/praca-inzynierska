@@ -1,90 +1,216 @@
 % Część teoretyczna
-@Book{ TAPL,
-    author = "Benjamin C. Pierce",
-    title = "Types and Programming Languages",
-    publisher = "The MIT Press",
-    year = "2002",
-    isbn = "0-262-16209-8"
+@Book{TAPL,
+ author = {Pierce, Benjamin},
+ title = {Types and programming languages},
+ publisher = {MIT Press},
+ year = {2002},
+ address = {Cambridge, Mass},
+ isbn = {978-0-262-16209-8}
 }
 
-@Book{ Dragon,
-    author = "Aho and Lam and Sethi and Ullman",
-    title = "Compilers: Principles, Techniques, and Tools",
-    publisher = "Pearson Education, Inc",
-    year = "2006",
-    isbn = "1-292-02434-8"
+@Book{Dragon,
+ author = {Aho, Alfred},
+ title = {Compilers : principles, techniques, and tools},
+ publisher = {Pearson},
+ year = {2014},
+ address = {Harlow, Essex},
+ isbn = {978-1292024349}
 }
 
-@Book{ AOSA,
-    author = "Amy Brown and Greg Wilson",
-    title = "The Architecture Of Open Source Applications, Volume II",
-    publisher = "lulu.com",
-    year = "2008",
-    isbn = "1-105-57181-5"
+@InCollection{AOSA,
+	title = "The {G}lasgow {H}askell {C}ompiler",
+	author = "S. Marlow and S. {Peyton Jones}",
+	editor = "A. Brown and G. Wilson",
+	chapter = "5",
+	volume = "II",
+	year = "2012",
+	booktitle = "The Architecture of Open Source Applications",
+	url = "http://www.aosabook.org/en/ghc.html"
 }
 
-@Book { LearnYouAHaskell,
-    author = "Miran Lipovača",
-    title = "Learn You a Haskell for Great Good!",
-    publisher = "No Starch Press",
-    year = "2011",
-    isbn = "978-1-59327-283-8"
+@Book{LearnYouAHaskell,
+ author = {Lipova\v{c}a, Miran},
+ title = {Learn you a Haskell for great good! a beginner's guide},
+ publisher = {No Starch Press},
+ year = {2011},
+ address = {San Francisco, Calif},
+ isbn = {978-1-59327-283-8}
 }
 
-@Book { RealWorldHaskell,
-    author = "Bryan O'Sullivan, John Goerzen, Donald Bruce Stewart",
-    title = "Real World Haskell",
-    publisher = "O'Reilly Media",
-    year = "2008",
-    isbn = "0-596-51498-0"
+@Book{RealWorldHaskell,
+ author = {Sullivan, Bryan},
+ title = {Real world Haskell},
+ publisher = {O'Reilly},
+ year = {2009},
+ address = {Sebastopol, CA},
+ isbn = {0-596-51498-0}
 }
+
+% Rozszerzenia
+@techreport{ExtPhantomTypes,
+    author = {James Cheney and Ralf Hinze},
+    title = {First-class phantom types},
+    institution = {Cornell University},
+    year = {2003}
+}
+
+@inproceedings{ExtGADTs,
+ author = {Peyton Jones, Simon and Vytiniotis, Dimitrios and Weirich, Stephanie and Washburn, Geoffrey},
+ title = {Simple Unification-based Type Inference for GADTs},
+ booktitle = {Proceedings of the Eleventh ACM SIGPLAN International Conference on Functional Programming},
+ series = {ICFP '06},
+ year = {2006},
+ isbn = {1-59593-309-3},
+ location = {Portland, Oregon, USA},
+ pages = {50--61},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/1159803.1159811},
+ doi = {10.1145/1159803.1159811},
+ acmid = {1159811},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {generalized algebraic data types, type inference},
+} 
+
+@inproceedings{ExtPromotion,
+ author = {Yorgey, Brent A. and Weirich, Stephanie and Cretin, Julien and Peyton Jones, Simon and Vytiniotis, Dimitrios and Magalh\~{a}es, Jos{\'e} Pedro},
+ title = {Giving Haskell a Promotion},
+ booktitle = {Proceedings of the 8th ACM SIGPLAN Workshop on Types in Language Design and Implementation},
+ series = {TLDI '12},
+ year = {2012},
+ isbn = {978-1-4503-1120-5},
+ location = {Philadelphia, Pennsylvania, USA},
+ pages = {53--66},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2103786.2103795},
+ doi = {10.1145/2103786.2103795},
+ acmid = {2103795},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {haskell, kinds, polymorphism, promotion},
+} 
+@incollection{ExtFunDeps,
+  added-at = {2014-06-20T14:18:24.000+0200},
+  author = {Jones, MarkP.},
+  biburl = {http://www.bibsonomy.org/bibtex/23f6311dfec3bdb907751833427b68d16/mhwombat},
+  booktitle = {Programming Languages and Systems},
+  doi = {10.1007/3-540-46425-5_15},
+  editor = {Smolka, Gert},
+  interhash = {0c60e0cf4a39212c853b5e2f04588754},
+  intrahash = {3f6311dfec3bdb907751833427b68d16},
+  isbn = {978-3-540-67262-3},
+  keywords = {dependencies functional fundeps haskell},
+  language = {English},
+  pages = {230-244},
+  publisher = {Springer Berlin Heidelberg},
+  series = {Lecture Notes in Computer Science},
+  timestamp = {2014-07-07T17:22:36.000+0200},
+  title = {Type Classes with Functional Dependencies},
+  url = {http://dx.doi.org/10.1007/3-540-46425-5_15},
+  volume = 1782,
+  year = 2000
+}
+
+@inproceedings{ExtAssocTyFams,
+ author = {Chakravarty, Manuel M. T. and Keller, Gabriele and Jones, Simon Peyton},
+ title = {Associated Type Synonyms},
+ booktitle = {Proceedings of the Tenth ACM SIGPLAN International Conference on Functional Programming},
+ series = {ICFP '05},
+ year = {2005},
+ isbn = {1-59593-064-7},
+ location = {Tallinn, Estonia},
+ pages = {241--253},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/1086365.1086397},
+ doi = {10.1145/1086365.1086397},
+ acmid = {1086397},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {associated types, generic programming, type classes, type functions, type inference},
+} 
+
+@inproceedings{ExtAssocTypesWithClass,
+ author = {Chakravarty, Manuel M. T. and Keller, Gabriele and Jones, Simon Peyton and Marlow, Simon},
+ title = {Associated Types with Class},
+ booktitle = {Proceedings of the 32Nd ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '05},
+ year = {2005},
+ isbn = {1-58113-830-X},
+ location = {Long Beach, California, USA},
+ pages = {1--13},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/1040305.1040306},
+ doi = {10.1145/1040305.1040306},
+ acmid = {1040306},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {associated types, self-optimising libraries, type classes, type-directed translation, type-indexed types},
+} 
+
+@inproceedings{ExtClosedTyFams,
+ author = {Eisenberg, Richard A. and Vytiniotis, Dimitrios and Peyton Jones, Simon and Weirich, Stephanie},
+ title = {Closed Type Families with Overlapping Equations},
+ booktitle = {Proceedings of the 41st ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '14},
+ year = {2014},
+ isbn = {978-1-4503-2544-8},
+ location = {San Diego, California, USA},
+ pages = {671--683},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/2535838.2535856},
+ doi = {10.1145/2535838.2535856},
+ acmid = {2535856},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {haskell, system fc, type families, type-level computation},
+} 
 
 % Część techniczna
 % GHC Wiki, linki muszą prowadzić bezpośrednio do zasobów, nie wystarczy jeden do indexu
 % TODO: Skopiuj strony na płytę. > make web-sources powinno zadziałać. Uaktualnić dzień.
-@Misc{ WikiNewcomers,
+@Misc{WikiNewcomers,
 	key = "Newcomers - GHC",
 	title = "{Newcomers - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Newcomers}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiFixingBugs,
+@Misc{WikiFixingBugs,
 	key = "WorkingConventions/FixingBugs - GHC",
 	title = "{WorkingConventions/FixingBugs - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/WorkingConventions/FixingBugs}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiGettingTheSources,
+@Misc{WikiGettingTheSources,
 	key = "Building/GettingTheSources - GHC",
 	title = "{Building/GettingTheSources - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Building/GettingTheSources}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiBuildSystem,
+@Misc{WikiBuildSystem,
 	key = "Building/Using - GHC",
 	title = "{Building/Using - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Building/Using}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiPhabricator,
+@Misc{WikiPhabricator,
 	key = "Phabricator - GHC",
 	title = "{Phabricator - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Phabricator}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiInjectiveTypeFamilies,
+@Misc{WikiInjectiveTypeFamilies,
 	key = "InjectiveTypeFamilies - GHC",
 	title = "{InjectiveTypeFamilies - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/InjectiveTypeFamilies}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiTickets,
+@Misc{WikiTickets,
 	key = "Status/Tickets - GHC",
 	title = "{Status/Tickets - GHC}",
 	howpublished = "\url{https://ghc.haskell.org/trac/ghc/wiki/Status/Tickets}",
@@ -92,21 +218,21 @@
 }
 
 % Haskell Wiki
-@Misc{ WikiImplementations,
+@Misc{WikiImplementations,
 	key = "Implementations - HaskellWiki",
 	title = "{Implementations - HaskellWiki}",
 	howpublished = "\url{https://wiki.haskell.org/Implementations}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiSpecification,
+@Misc{WikiSpecification,
 	key = "Language and library specification - HaskellWiki",
 	title = "{Language and library specification - HaskellWiki}",
 	howpublished = "\url{https://wiki.haskell.org/Language_and_library_specification}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ WikiIndexedTypes,
+@Misc{WikiIndexedTypes,
 	key = "GHC/Type families - HaskellWiki",
 	title = "{GHC/Type families - HaskellWiki}",
 	howpublished = "\url{https://wiki.haskell.org/GHC/Indexed_types}",
@@ -114,14 +240,14 @@
 }
 
 % GHC User's Guide
-@Misc{ GuideTypeFamilies,
+@Misc{GuideTypeFamilies,
 	key = "Type families",
 	title = "{Type families}",
 	howpublished = "\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/type-families.html}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ GuidePartialTypeSignatures,
+@Misc{GuidePartialTypeSignatures,
     key = "Partial Type Signatures",
 	title = "{Partial Type Signatures}",
 	howpublished = "\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/partial-type-signatures.html}",
@@ -129,21 +255,21 @@
 }
 
 % Dokumentacje
-@Misc{ DocsHappy,
+@Misc{DocsHappy,
 	key = "Happy Documentation",
 	title = "{Happy Documentation}",
 	howpublished = "\url{https://www.haskell.org/happy/doc/happy.pdf}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ DocsAlex,
+@Misc{DocsAlex,
 	key = "Alex Documentation",
 	title = "{Alex Documentation}",
 	howpublished = "\url{https://www.haskell.org/alex/doc/alex.pdf}",
     note = "(Stan na dzień: 2015-01-11)"
 }
 
-@Misc{ UHCUserGuide,
+@Misc{UHCUserGuide,
 	key = "UHCUserDocumentation \textless\ Ehc \textless\ UCCS",
 	title = "{UHCUserDocumentation \textless\ Ehc \textless\ UCCS}",
 	howpublished = "\url{http://foswiki.cs.uu.nl/foswiki/Ehc/UhcUserDocumentation}",
