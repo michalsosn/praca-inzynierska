@@ -1,11 +1,4 @@
 \chapter{Usprawnienia Glasgow Haskell Compiler}\label{chap:badania}
-\todo[disable,inline,size=\tiny]{Ten rozdział zawiera opis wyników uzyskanych w~ramach pracy. Jeśli praca miała
-cel badawczy należy skupić się na opisie przeprowadzonych eksperymentów oraz
-prezentacji i~analizie uzyskanych wyników. Jeśli praca nie miała na celu
-uzyskania nowatorskich wyników, należy skupić się na opisie architektury
-stworzonej aplikacji. W~obu przypadkach podstawowym celem tego rozdziału jest
-realizacja celów postawionych w~rozdziale \ref{sec:cele_pracy}. Rozdział ten ma
-bezspornie pokazywać, że cele pracy zostały zrealizowane}
 
 \sectionex{Zgłoszenie nr 10839}{Consistent pretty-printing of type families}
 \label{sec:zgloszenie_10839}
@@ -66,9 +59,8 @@ type instance Fc a b = Int
 \end{lstlisting}
 
 \begin{lstlisting}[float,language={},label={lst:consistent_injectivity_before},
-                   caption={Błąd generowany przez kompilator w przypadku
-                     \ref{lst:consistent_injectivity_code} przed wprowadzeniem
-                     zmian.}]  T6018fail.hs:66:15: error: Type family equation
+                   caption={Błąd generowany przez kompilator w przypadku \ref{lst:consistent_injectivity_code} przed wprowadzeniem zmian.}]
+T6018fail.hs:66:15: error: Type family equation
   violates injectivity annotation.  Kind variable ‘k’ cannot be inferred from
   the right-hand side.  (enabling -fprint-explicit-kinds might help) In the type
   family equation: forall (k :: BOX) (a :: k) (b :: k). Fc a b = Int
@@ -77,20 +69,30 @@ type instance Fc a b = Int
 
 \subsection{Rozwiązanie} %%%
 
-Po zapoznaniu się z kod GHC \js{gram}, udało się odnaleźć miejsca odpowiadające za każdy z
-tych komunikatów. Są to odpowiednio funkcja \code{inaccessibleCoAxBranch} dla
-\ref{lst:consistent_overlapped_before}, \code{pprCoAxBranch} w przypadku
-\ref{lst:consistent_injectivity_before} i \code{pprCoAxBranchHdr} w przypadku
-\ref{lst:consistent_conflicting_before}. Znaleziono jeszcze inną funkcję
+Po zapoznaniu się z kodem GHC, udało się odnaleźć miejsca odpowiadające za każdy z
+tych komunikatów. Była to funkcja \code{inaccessibleCoAxBranch} z modułu \code{TcValidity}
+w przypadku \ref{lst:consistent_overlapped_before} oraz funkcje \code{pprCoAxBranch}
+i \code{pprCoAxBranchHdr} z  modułu \code{Coercion} w przypadkach odpowiednio
+\ref{lst:consistent_injectivity_before} i \ref{lst:consistent_conflicting_before}.
+Znaleziono jeszcze inną funkcję
 \code{pprCoAxiom}, używaną do generowania komunikatów przy kompilacji z flagą
-\code{-ddump-types}. Wszystkie one służyły do prezentowania rodzin typów w
-komunikatach, lecz były zaimplementowane osobno. Stąd nietrudno było o
-rozbieżności. \js{Może warto powiedzieć, że wynikało to z różnic w reprezentacji
- otwartych i zamkniętych rodzin typów? Można poprzeć definicjami typów danych.
- Proszę pamiętać, że to praca inżynierska i dlatego należy szczegółowo wyjaśnić
- kwestie inżynieryjne, tzn. nie tylko czemu nowe rozwiązanie jest dobre, ale
- skąd wynikało stare rozwiazanie.  Myślę też że mówiąc o funkcjach warto odwołać
- się do modułów w których się znajdują.}
+\code{-ddump-types}. Wszystkie one operowały na typie danych \code{CoAxBranch},
+odpowiadającym równaniu rodziny typów oraz \code{CoAxiom}, który odpowiada
+deklaracji rodziny typów i odrobinę różni się w zależności od tego, czy rodzina
+jest otwarta czy zamknięta. Główną różnicą jest to, czy posiada więcej niż jedną
+\code{CoAxBranch}. Mimo tego podobieństwa, które uczyniło ich ujednolicenie
+w tej pracy prostym zadaniem, zostały one zaimplementowane osobno.
+
+Funkcja \code{inaccessibleCoAxBranch} generuje ostrzeżenie w sytuacji, gdy równanie
+w zamkniętej rodzinie typów nigdy nie może zostać zastosowane z powodu ogólniejszego
+równania wymienionego wcześniej.
+\code{pprCoAxBranchHdr} używana jest do zgłaszania błędów w otwartych rodzinach typów,
+gdy dziedziny dwóch równań nachodzą na siebie.
+Z kolei \code{pprCoAxBranch} wykorzystywany jest do generowania błędów związanych
+z naruszeniem zadeklarowanej różnowartościowości rodziny typów.
+Różne warunki wystąpienia sprawiły, że funkcje znalazły się w różnych miejscach
+programu, w kilku modułach i w komunikacie skupiały się na różnych informacjach.
+Stąd nietrudno było o rozbieżności.
 
 Dokonano usprawnienia, które polegało na zrefaktorowaniu kodu i wydzieleniu
 części wspólnej do osobnej funkcji \code{ppr\underscore co\underscore
@@ -140,13 +142,13 @@ T9371.hs:14:10:
 \end{lstlisting}
 
 Inaczej wygląda to w przypadku funkcji \code{pprCoAxiom}, która jest używana
-przy generowaniu zrzutu z type-checkera przy kompilacji z odpowiednią
+przy generowaniu zrzutu z type checkera przy kompilacji z odpowiednią
 flagą. Tutaj pożądane jest wyświetlenie wewnętrznej reprezentacji i
 \code{pprDataCons} nie jest używana. Przykładowy efekt widać na przykładzie
 \ref{lst:consistent_tcdump}.
 
 \begin{lstlisting}[float,language={},label={lst:consistent_tcdump},
-                   caption={Fragment oczekiwanego zrzutu z type-checkera testu DataFamilyInstanceLHS z wyświetlonym równaniem rodziny typów danych.}]
+                   caption={Fragment oczekiwanego zrzutu z type checkera testu DataFamilyInstanceLHS z wyświetlonym równaniem rodziny typów danych.}]
 COERCION AXIOMS
   axiom DataFamilyInstanceLHS.TFCo:R:SingMyKind_ ::
     Sing = DataFamilyInstanceLHS.R:SingMyKind_
@@ -213,11 +215,20 @@ funkcjach na poziomie termów. Są one uaktywniane tą samą flagą
 Ważnym zagadnieniem okazało się zdefiniowanie, kiedy zmienna typu uważana jest
 za używaną. W zaimplementowanej wersji, by ostrzeżenie nie było generowane,
 zmienna musi występować po prawej stronie równania lub występować przynajmniej
-dwa razy po lewej stronie równania.
-\js{Proszę wyjaśnić czemu. To drugie wcale nie jest oczywiste (sami to
-  przeoczyliśmy na początku).}
-Obie sytuacje są pokazane we fragmencie
-\ref{lst:unused_used_examples}
+dwa razy po lewej stronie równania. Wartym uwagi jest, iż ten drugi przypadek
+nie występuje w przypadku funkcji na poziomie termów. Jest tak, gdyż wielokrotne
+użycie tej samej zmiennej we wzorcach zwykłej funkcji jest uważane za
+próbę wprowadzenia konfliktowych definicji i zawsze generuje błąd.
+Z kolei w rodzinach typów jest to zupełnie dopuszczalne i oznacza, że takie
+równanie ma zastosowanie wyłącznie wtedy, gdy za zmienną podstawiony jest ten sam
+typ we wszystkich miejscach jej wystąpienia. Zatem definicja funkcji \code{equal a a = True}
+jest niepoprawna i w szczególności nie pozwala wyrazić tego, iż oba argumenty muszą mieć
+równe wartości, lecz równanie rodziny typów \code{Equal a a = ()} jest poprawne
+i użyte przy aplikacji \code{Equal} do dwóch równych typów. Ze względu na to
+zachowanie, zmienne występujące wielokrotnie we wzorcach są uznawane za używane.
+We fragmencie \ref{lst:unused_used_examples} zmienna \code{a} jest uznawana za
+używaną w rodzinie \code{X} ze względu na pierwszy warunek, a w \code{Y}
+ze względu na drugi.
 
 \begin{lstlisting}[float,label={lst:unused_used_examples},
                    caption={Przykład funkcji na poziomie typów ze zmiennymi uznawanymi za wykorzystywane.}]
@@ -244,39 +255,39 @@ type family E a b where
 \subsection{Rozwiązanie} %%%
 
 Wyświetlania ostrzeżeń dokonano przez zmiany w renamerze. Po analizie kodu udało
-się stwierdzić, że funkcja \code{rnFamInstDecl} odpowiada za wszystkie rodziny
+się stwierdzić, że funkcja \code{rnFamInstDecl} z modułu \code{RnSource} odpowiada za wszystkie rodziny
 typów w kodzie, otwarte, zamknięte i związane z klasą. Ponadto jest już w niej
-używana funkcja \code{extractHsTysRdrTyVars}, która przechodzi po typie,
+używana funkcja \code{extractHsTysRdrTyVars} z modułu \code{RnTypes}, która
+przechodzi po wzorcach po lewej stronie równania,
 kolekcjonując nazwy zmiennych, by utworzyć z nich zmienne typów. Zbiór zmiennych
-używanych to z kolei to samo, co zbiór zmiennych wolnych w prawej stronie
+używanych to z kolei to samo, co zbiór zmiennych wolnych po prawej stronie
 równania, zwracany przez funkcję \code{rnPayload}. Większość informacji
 potrzebnych do realizacji założeń zgłoszenia było zatem dostępnych od początku,
-potrzebne było pozyskanie informacji o duplikatach.
+należało pozyskać informacje o duplikatach.
 
-W tym celu zastąpiona funkcja \code{extractHsTysRdrTyVars} zastąpiona została
+W tym celu funkcja \code{extractHsTysRdrTyVars} zastąpiona została
 bardzo podobną \code{extractHsTysRdrTyVarsDups}, która zwraca wszystkie
-wystąpienia zmiennych z typu, nie usuwając wielokrotnych wystąpień tej samej
-nazwy. To umożliwiło sprawdzanie drugiego z warunków, kiedy zmienna jest
-uznawana za używaną. \js{Chyba warto tutaj rozróżniać między prawą i lewą stroną
-  równania.  Bo przecież interesują nas powtórzenia tylko po lewej stronie.}
+wystąpienia zmiennych z lewej strony równania rodziny typów, nie usuwając wielokrotnych wystąpień tej samej
+nazwy. To umożliwia sprawdzanie drugiego z warunków, kiedy zmienna jest
+uznawana za używaną.
 
 Do wygenerowania ostrzeżeń użyta została funkcja \code{warnUnusedMatches}, ta
 sama, która odpowiada za ostrzeżenia w funkcjach na poziomie termów. Gwarantuje
-to, że ostrzeżenia te są w tym samym formacie. Następuje w niej również
+to, że komunikaty są w tym samym formacie. Następuje w niej również
 odczytanie ze środowiska globalnego w monadzie renamera, czy opcja generowania
 ostrzeżeń została wybrana przez programistę, na przykład przez ustawienie flagi
 \code{-fwarn-unused-matches} lub \code{-Wall}.
 
-Ignorowanie zmiennych zaczynających się od podkreślnika zachodzi w
-\code{warnUnusedMatches} przez zwyczajne sprawdzenie pierwszego znaku nazwy.
-\js{Proszę wyjasnić o co chodzi z tym ignorowaniem nazw zaczynających się od
-  podkreślnika.}
+Zmienne o identyfikatorach zaczynających się od podkreślnika nie powinny wywoływać
+ostrzeżeń niezależnie od tego, czy są używane. Ich ignorowanie zachodzi w
+funkcji \code{warnUnusedMatches} z \code{RnEnv} przez zwyczajne sprawdzenie jaki
+jest pierwszy znaku w nazwie.
 Z kolei anonimowe i nazwane symbole wieloznaczne nie wywołują ostrzeżeń, gdyż nie
-są kolekcjonowane w funkcji \code{extractHsTysRdrTyVarsDups}, więc wcale nie
-znajdują się na liście nazw.
+są kolekcjonowane w funkcji \code{extractHsTysRdrTyVarsDups}, więc nigdy nie
+znajdują się na zwróconej przez nią liście nazw.
 
 Zmiana wymagała przejrzenia rodzin typów w GHC oraz powiązanych bibliotekach i
-uaktualnienia ich tak, by nie generowały ostrzeżeń. W przeciwnym \js{gram} proces
+uaktualnienia ich tak, by nie generowały ostrzeżeń. W przeciwnym razie proces
 walidacji kończyłby się błędem, gdyż został on skonfigurowany, by nie dopuszczać
 ostrzeżeń w pewnych częściach projektu. Z tego powodu konieczne było stworzenie
 niewielkiej łatki do biblioteki Hoopl, w której poprzedzono problematyczne
@@ -295,9 +306,10 @@ ze względu na wielokrotne wystąpienie po lewej stronie, z nazwą poprzedzoną
 podkreślnikiem oraz symboli wieloznacznych. Testy te różnią się od siebie tym,
 iż w przypadku \code{UnusedTyVarWarningsNamedWCs} kompilacja zachodzi z
 uaktywnionym rozszerzeniem \code{NamedWildCards}. Ma to związek ze zgłoszeniem
-opisanym w sekcji \ref{sec:zgloszenie_11098}
+opisanym w sekcji \ref{sec:zgloszenie_11098}.
 
-Fragment \ref{lst:unused_test_code} to część jednego z opisanych testów. Z kolei fragment \ref{lst:unused_test_stderr} to ostrzeżenia, które są dla niego oczekiwane.
+Fragment \ref{lst:unused_test_code} to część jednego z opisanych testów.
+Z kolei fragment \ref{lst:unused_test_stderr} to ostrzeżenia, które są dla niego oczekiwane.
 \begin{lstlisting}[float,numbers=left,firstnumber=7,label={lst:unused_test_code},
                    caption={Fragment testu \code{UnusedTyVarWarnings} z równaniami wywołującymi ostrzeżenia lub zawierającymi zmienne poprzedzone podkreślnikiem.}]
 type family C a b where
@@ -406,13 +418,13 @@ identyfikatory jako zwykłe zmienne typów, a następnie zamieniać część z n
 renamerze. Rzeczywiście, w ramach pracy dokonano zmian w \code{Parser.y}, by
 bezwarunkowo konstruowane były \code{HsTyVar}, reprezentujące zmienne typu.
 
-\js{Przyznam, że trudno się to czyta nie mając kodu przed oczami.}
-Do rekordu \code{LocalRdrEnv} przekazywanego w monadzie renamera dodane zostało
+%\js{Przyznam, że trudno się to czyta nie mając kodu przed oczami.}
+Do rekordu \code{LocalRdrEnv} przekazywanego w monadzie renamera \code{RnM} dodane zostało
 pole \code{lre\underscore nwcs}, będące zbiorem nazw zmiennych, które powinny
 zostać zastąpione przez symbole wieloznaczne. Rozwiązanie problemu z fragmentu
 \ref{lst:namedwcs_not_allowed} uzyskano poprzez kontrolę, kiedy ten zbiór ma być
-wypełniany. Umieszczane są w nim bowiem na wolne zmienne zaczynające sie od
-podkreślnika, lecz wyłącznie w funkcjach, które operują na typie
+wypełniany. Wolne zmienne, zaczynające się od podkreślnika, umieszczane są w nim
+bowiem wyłącznie w funkcjach, które operują na typie
 \code{LHsSigWcType}. Tym bowiem cechują się funkcje, którymi dokonywane jest
 zastępowanie nazw w kontekstach dopuszczających nazwane symbole wieloznaczne. Do
 tego zbiór pozostaje pusty, gdy opcja \code{NamedWildCards} jest nieaktywna.
@@ -426,13 +438,13 @@ fragmentu \ref{lst:namedwcs_explicit_forall}.
 
 \code{lre\underscore nwcs} jest wykorzystywany w wariancie funkcji
 \code{rnHsTyKi} przyjmującym argument \code{HsTyVar}. Do zamiany zmiennej typu
-na wielznacznik dochodzi, gdy nazwa zmiennej zostanie w nim odnaleziona. W
+na wieloznacznik dochodzi, gdy nazwa zmiennej zostanie w nim odnaleziona. W
 przeciwnym razie argument traktowany jest jako zwykła zmienna.
 
 \subsection{Testy} %%%
 
 Poprawność rozwiązania weryfikują trzy testy. \code{T11098} to skrypt w GHCi,
-który znalażł się w opisie błędu. \code{NamedWildcardsAsTyVars} sprawdza, czy
+który znalazł się w opisie błędu. \code{NamedWildcardsAsTyVars} sprawdza, czy
 uaktywnienie rozszerzenia \code{NamedWildCards} nie powoduje błędów kompilacji w
 poprawnych programach, lecz zawierających zmienną zaczynająca się od
 podkreślnika w kontekście innym niż sygnatura typu, podobnie jak w przykładzie

@@ -12,16 +12,10 @@ do prac nad GHC. Z tego powodu środowisko nie zapewniało na przykład ciągłe
 raportowania błędów w kodzie lub wyszukiwania deklaracji określonego typu, choć
 z tych udogodnień można korzystać w innych projektach.
 
-Drugim językiem wykorzystanym w GHC jest Python.
-\js{Nieco mylące stwierdzenie.  To że testy są uruchamiane przy użyciu skryptów
- Pythona nie oznacza, że w pisaniu GHC wykorzystano Pythona.  Co więcej, mimo
- pracy nad GHC od kilku lat moja znajomość Pythina jest zerowa, co pokazuje że
- dodawanie testów wcale nie wymaga znajomości tego języka.}
-Testowanie i walidacja
-kompilatora są realizowane przez skrypty w tym języku, więc dodając nowe testy w
-pracy należało się z nim zetknąć. kontakt. Jest on wymagany do zbudowania GHC
+Testowanie i walidacja kompilatora są realizowane przez skrypty w języku
+Python. Jest on wymagany do zbudowania GHC
 również z tego powodu, że do stworzenia dokumentacji wykorzystane zostało
-narzędzie Sphinx wymagające interpretera.
+narzędzie Sphinx, wymagające interpretera.
 
 W projekcie użyty został również język C do napisania środowiska
 uruchomieniowego, linkowanego z każdym programem skompilowanym przez GHC. W
@@ -34,11 +28,10 @@ znikomy.
 \subsection{Git}
 
 Kod GHC znajduje się w repozytorium Git i jest publicznie dostępny do
-pobrania.
-\js{Link}
+pobrania pod adresem \url{http://git.haskell.org/ghc.git}.
 Biblioteki wykorzystywane w kompilatorze również są przechowywane w
 repozytoriach Gita, lecz są osobnymi projektami, dołączonymi do GHC jako
-submoduły. Klon oficjalneago repozytorium znajduje się również w popularnym
+submoduły. Klon oficjalnego repozytorium znajduje się również w popularnym
 serwisie GitHub. Prawa zapisu do repozytorium są
 ograniczone\cite{WikiGettingTheSources}.
 
@@ -120,7 +113,7 @@ w którym nie wykryto problemów.
 
 Jak wspomniane zostało w sekcji \ref{sec:jezyk_programowania}, GHC jest budowany
 z użyciem innej wersji GHC. Aby zapewnić stabilność, istnieje wymaganie, że nowa
-wersja kompilatora musi być możliwa do skompilowania z wykorzystaniem jednej z
+wersja kompilatora musi być możliwa do skompilowania z wykorzystaniem dowolnej z
 dwóch poprzednich stabilnych wersji\cite{WikiFixingBugs}. Sam proces budowania
 przebiega wieloetapowo. Najpierw, z użyciem starszej wersji kompilatora,
 budowane są biblioteki, zależności GHC. Następnie kompilowany w ten sposób jest

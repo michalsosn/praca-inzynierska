@@ -1,11 +1,5 @@
 \chapter{Część teoretyczna}\label{chap:teoria}
 
-\todo[disable,inline]{Ten rozdział powinien zawierać teorię z~której autor będzie korzystał w~dalszej
-części pracy.  Podstawowym celem istnieniem tego rozdziału jest umożliwienie
-czytelnikowi zrozumienie teorii rozwijanej w pracy oraz osiągniętych wyników
-praktycznych.  Jeżeli jakieś informacje nie są niezbędne do zrozumienia
-osiągnięć autora nie należy o nich pisać.}
-
 \section{Budowa kompilatora}\label{sec:budowa_kompilatora}
 
 Kompilator to program, który przyjmuje na wejściu reprezentację programu w
@@ -17,14 +11,15 @@ i \foreign{backend}, generujący kod docelowy. Podział ten umożliwia utrzymywa
 wielu \foreign{frontendów} i \foreign{backendów}, na przykład w GHC dostępne są
 trzy \foreign{backendy}, generujące kod maszynowy, kod w języku pośrednim LLVM
 lub kod w C\cite{AOSA}. GHC może być uruchomiony w trybie interaktywnym, jako
-interpreter GHCi. \js{Ostatnie zdanie nic nie wnosi}
+interpreter GHCi.
+%\js{Ostatnie zdanie nic nie wnosi} - GHCi pojawia się w części 4, więc chciałem o nim napomknąć
 
-\foreign{Frontend} odpowiada za zanalizowanie \js{przeanalizowanie} tekstu otrzymanego na wejściu
+\foreign{Frontend} odpowiada za przeanalizowanie tekstu otrzymanego na wejściu
 zgodnie z gramatyką języka, zbudowanie z niego drzewa składniowego i
 przeprowadzenie statycznej kontroli typów. W razie błędów konieczne jest
 wyświetlenie użytkownikowi wiadomości z opisem wystarczającym do jego
 zrozumienia. Następnie następuje faza generowania kodu pośredniego.
-Język, w którym program pisze użytkownik \js{gram.} ma zwykle rozbudowaną składnię i jest
+Język, w którym program pisany jest przez użytkownika ma zwykle rozbudowaną składnię i jest
 zaprojektowany z myślą o łatwym użytkowaniu przez ludzi. Języki pośrednie są z
 kolei możliwie uproszczone pod względem składni i zaprojektowane z myślą o
 dalszym przetwarzaniu przez kompilator. Kod ten przekazywany jest do
@@ -38,9 +33,7 @@ schemacie \ref{fig:AOSA_compiler} można odnaleźć wymienione wcześniej fazy. 
 tej pracy dokonano modyfikacji we \foreign{frontendzie}, dlatego poświęcono mu
 więcej uwagi.
 
-\js{U mnie po zbudowaniu pracy ten rysunek wylądował na końcu rozdziału. To raczej błąd.}
-
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{images/AOSA_compiler}
     \caption[Schemat Glasgow Haskell Compiler]{Schemat Glasgow Haskell Compiler\cite{AOSA}}
@@ -52,18 +45,26 @@ Parsowanie w GHC dzieli się na etapy analizy leksykalnej i składniowej. Jest t
 proces tak dobrze opracowany od strony algorytmicznej, że istnieją narzędzia,
 które pozwalają na generowanie gotowych lekserów i parserów z opisu gramatyki.
 
-W czasie analizy leksykalnej plik na wejściu jest skanowany i wyodrębniane są z
-niego ciągi znaków tzw. leksemy. Gramatyka leksykalna jest definiowana w postaci
-szeregu wyrażeń regularnych odpowiadających kolejnym leksemom. Lekser wczytuje
-kolejne znaki, dopasowując je do wyrażeń regularnych póki jest to możliwe. Po
-udanym dopasowaniu zwraca strukturę danych reprezentującą dany leksem, czyli
-token. Proces ten jest kontynuowany do przetworzenia całego wejścia, co generuje
-strumień tokenów. \js{Mówi Pan o leksemach, a potem w pewnym momencie pojawiają
-  się tokeny.  Może już przy pierwszej wzmiance o leksemach warto napisać, że są
-  inaczej nazywane tokenami.}
+W czasie analizy leksykalnej plik na wejściu jest skanowany i generowany jest
+z niego strumień tzw. tokenów. W GHC są to wartości typu \code{Token}
+zdefiniowanego w \code{Lexer.x}. Gramatyka leksykalna jest definiowana
+w postaci szeregu wyrażeń regularnych, odpowiadających kolejnym tokenom.
+Lekser wyodrębnia z ciągu znaków na wejściu podciągi pasujące do wyrażeń,
+czyli leksemy. Stosowana jest metoda najdłuższego dopasowania, tzn. lekser
+wczytuje kolejne znaki tak długo, aż przynajmniej jedno wyrażenie akceptuje
+wczytany podciąg, po czym zwraca token odpowiadający temu wyrażeniu.
+Proces ten jest kontynuowany do przetworzenia całego wejścia.
+%\js{Mówi Pan o leksemach, a potem w pewnym momencie pojawiają
+%  się tokeny.  Może już przy pierwszej wzmiance o leksemach warto napisać, że są
+%  inaczej nazywane tokenami.}
+% Kierując się \cite{Dragon} postanowiłem przyjąć odrobinę różne znaczenie słów leksem i token
+% "A lexeme is a sequence of characters in the source program that matches the pattern for a token and is identified by the lexical analyzer as an instance of that token."
+% "A token is a pair consisting of a token name and an optional attribute value. The token name is an abstract symbol representing a kind of lexical unit..."
+% Stąd leksemem nazywam ciąg znaków dopasowany do wyrażenia regularnego
+% a tokenem typ danych z Lexer.x data Token = ITas | ITcase | ...
 
 W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja
-gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. Na przykładzie
+gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. W przykładzie
 \ref{lst:alex_example} pokazane są fragmenty tego pliku. Na początku widoczne są
 makra, za którymi stoją wyrażenia regularne. Na końcu fragmentu pokazane jest
 kilka reguł z tymi makrami po lewej stronie i wyrażeniami, które mają zostać
@@ -107,10 +108,10 @@ haskell :-
 
 W czasie analizy składniowej strumień tokenów zamieniany jest w bardziej złożoną
 strukturę, drzewo składniowe. W GHC parser, tak jak lekser, został wygenerowany
-automatycznie przy użyciu narzędzia Happy. Definicja gramatyki dla Happy
-znajduje się w pliku \code{Parser.y}. Jest podana w notacji Backusa-Naura
-wzbogaconej, podobnie jak w Alex, o fragmenty kodu w Haskellu wywoływane do
-zbudowania struktury danej reprezentującej to drzewo\cite{DocsHappy}. Przykład
+automatycznie przy użyciu narzędzia Happy. Definicja gramatyki w formacie akceptowanym
+przez Happy znajduje się w pliku \code{Parser.y}. Jest podana w notacji Backusa-Naura
+wzbogaconej, podobnie jak w Alex, o fragmenty kodu w Haskellu wywoływane w celu
+stworzenia struktury danych reprezentującej to drzewo\cite{DocsHappy}. Przykład
 \ref{lst:happy_example} pokazuje wybrane produkcje z tego pliku, wykorzystujące
 przy tym token \code{ITvarid} zwracany przez funkcję \code{varid} z przykładu
 \ref{lst:alex_example}.
@@ -134,12 +135,12 @@ tyvarid :: { Located RdrName }
 
 \subsection{Renamer}\label{sec:renamer}
 
-W Haskellu, jak w wielu innych językach, może istnieć wiele funkcji, zmiennych,
+W Haskellu, jak w wielu innych językach, może istnieć kilka funkcji, zmiennych,
 typów danych, klas, itd. o tej samej nazwie, na przykład w różnych plikach albo
 przez występowanie w lokalnym zakresie w wyrażeniu \code{let} lub
 \code{where}. Z tego powodu później ten sam identyfikator może odnosić się do
-różnych rzeczy w zależności od jego miejsca wystąpienia i tego, co w tym miejscu
-jest widoczne w zakresie. Kompilator, w części zwanej renamerem, decyduje do
+różnych rzeczy, w zależności od tego, gdzie występuje i co w tym miejscu jest
+widoczne w zakresie. Kompilator, w części zwanej renamerem, decyduje, do
 której definicji odnosi się każde wystąpienie jakiejś nazwy.
 
 Każda osobna definicja otrzymuje na tym etapie unikalną, wewnętrzną
@@ -207,15 +208,21 @@ typów. Częścią definicji języka jest jego gramatyka, która określa, jakie
 znaków można uznać za program w tym języku. W skład gramatyki wchodzą wyrażenia,
 które w wielu językach można podzielić na termy i typy.
 
-Termy pozwalają wyrażać obliczenia dzięki zdefiniowanej ich semantyce.\js{gram} Istnieje
-kilka sposobów określania semantyki jak semantyka operacyjna lub semantyka
-denotacyjna.
-\js{Przemilczałbym semantykę denotacyjną i tylko krótko powiedział czym jest operacyjna}
-Semantykę operacyjną określa się przez przez podanie reguł
-ewaluacji, z których wynika relacja ewaluacji. W wyniku ewaluacji term może
-zostać znormalizowany do jednego z termów zwanych wartościami. Jeśli nie,
-uznajemy go za niepoprawny lub bezsensowny\cite{TAPL} jak na przykładzie
-\ref{lst:types_nonsense}.
+Termy pozwalają wyrażać obliczenia dzięki zdefiniowanej dla nich semantyce.
+Jednym z rodzajów semantyki jest semantyka operacyjna, w której wykonywanie
+obliczeń modeluje się za pomocą maszyny stanowej. Term jest lub, w bardziej
+złożonych semantykach, zawiera się w stanie maszyny. Ponadto istnieje relacja
+przejścia, określającej stany do jakich przechodzi maszyna w wyniku obliczeń.
+Semantykę operacyjną określa się przez przez podanie reguł ewaluacji, z których
+wynika ta relacja.
+
+Wykonywanie programu może zatrzymać się w stanie uważanym za końcowy. Term
+w postaci do jakiej zostaje znormalizowany w stanie końcowym nazywamy wartością.
+
+Obliczenia mogą też się nigdy nie zatrzymać lub utknąć w stanie, który nie jest
+końcowy, lecz dla którego relacja przejścia nie określa dalszych kroków.
+Termy, dla których taki jest rezultat, nazywamy niepoprawnymi lub
+bezsensownymi\cite{TAPL} jak na przykładzie \ref{lst:types_nonsense}.
 
 \begin{lstlisting}[float,label={lst:types_nonsense},
                    caption={Przykład bezsensownego wyrażenia w programie, z błędem GHC, który wywołuje.}]
@@ -234,17 +241,14 @@ nonsense.hs:3:15:
 \end{lstlisting}
 
 Typy są przyporządkowywane termom w relacji typowania wynikającej z pewnych
-reguł typowania. Zbiór reguł składa się na system typów. System typów służy do
-wykrywania niepoprawnych programów bez ewaluowania termów, często już na etapie
-kompilacji, a nie wykonywania. System typów jest konkluzywny lub bezpieczny,
+reguł typowania. Zbiór tych reguł składa się na system typów. System typów służy do
+wykrywania bezsensownych termów bez ich ewaluowania, często już na etapie kompilacji.
+System typów jest konkluzywny lub bezpieczny,
 jeżeli każdy term, który ma w nim przyporządkowany typ, jest sensowny. Z kolei
 jest zupełny, jeżeli każdy sensowny term jest w nim otypowany. Systemy typów w
-popularnych językach są przeważnie konkluzywne, lecz nie zupełne.
-\js{Sądzę, że łatwiej byłoby to zrozumieć, gdyby zapisał Pan to w formie
-  formalnych definicji: co to jest wyrażenie sensowne, konkluzywność itd.}
-Rozszerzenia
+popularnych językach są przeważnie konkluzywne, lecz nie zupełne. Rozszerzenia
 systemu typów dążą do zmniejszenia liczby poprawnych programów, które są w
-systemie typów nie dopuszczalne, co można określić jako zwiększenie jego
+systemie typów niedopuszczalne, co można określić jako zwiększenie jego
 ekspresywności. Rozszerzenia mogą doprowadzić do tego, że problem sprawdzenia,
 czy dany program jest poprawnie otypowany, stanie się nierozstrzygalny. Nie
 będzie wtedy możliwe stworzenie odpowiedniego algorytmu i zagwarantowanie, że
@@ -264,42 +268,22 @@ evil :: Diverge Int
 evil = 0
 \end{lstlisting}
 
-\todo[disable,inline]{Co do silnego typowania. Dragon: "An implementation of a
-  language is strongly typed if a compiler guarantees that the programs it
-  accepts will run without type errors.". TAPL: "I spent a few weeks trying to
-  sort out the terminology of "strongly typed," "statically typed," "safe,"
-  etc., and found it amazingly difficult... The usage of these terms is so
-  various as to render them almost useless.".}
-
 Polimorfizm to możliwość posiadania przez term więcej niż jednego przypisanego
-mu typu, różnego w zależności od miejsca użycia. W polimorfizmie parametrycznym
-uzyskuje się to przez wprowadzenie zmiennych typu, za które mogą zostać
-podstawione inne typy. Termy otypowane w ten sposób muszą mieć sens niezależnie
-od tego, jakie typy zostaną przyporządkowane zmiennym, choć np. w Haskellu
-istnieje możliwość wprowadzenia ograniczeń na zmienne. Typy takie mogą mieć
-składnię pozwalającą na zapisanie jawnego kwantyfikatora ogólnego, wiążącego
-zmienne w typie, zamiast pozostawiania tych zmiennych jako
-niezwiązanych.
-\js{Chyba przydałoby się to wyjasnić na przykładzie}
-Polimorfizm parametryczny odpowiada kwantyfikacji ogólnej z
-logiki. W polimorfizmie ad-hoc term może mieć przypisane różne typy dzięki temu,
-iż może mieć wiele definicji i wykorzystywać różne z nich w zależności od
-typu.
-\js{Polimrofizm ad-hoc jest znany wszystkim programistom Javy cz C++. Może warto
-  pokusić się o przykład z któregoś z tych języków?}
-W Haskellu ten polimorfizm jest dostępny w postaci klas
-typów\cite{TAPL}. W przykładzie \ref{lst:poly_parametric} funkcja \code{twice}
-jest polimorficzna\js{W pierwszej chwili myślałem, że na przykładzie będzie
-  polimorfizm parametryczny bo o nim była przed chwilą mowa},
-gdyż występuje w dwóch miejscach\js{Nie. funkcja jest parametryczna bo taką
-  sygnaturę typu podaliśmy. To że możemy użyć jej w dwóch miejscach na dwóch
-  różnych typach jest możliwe dzięki polimorfizmowi}, raz zmienna typu \code{a}
-służy za \code{Bool}, a raz za \code{String} \js{gram.}. Funkcja \code{twice'} pokazuje
-wspomnianą jawną kwantyfikację, jest równoważna poprzedniej funkcji, gdzie
-zmienne w sygnaturze są niezwiązane. Z kolei w przykładzie \ref{lst:poly_adhoc}
-funkcja \code{foo} występuje raz jako funkcja typu \code{Bool -> Int} i raz jako
-\code{String -> Int}. W każdym przypadku ma inną definicję, sensowną dla
-wybranego wtedy typu. 
+mu typu. Może on wtedy występować w miejscach, gdzie oczekiwany jest term jednego
+z tych typów.
+
+W polimorfizmie parametrycznym uzyskuje się to przez wprowadzenie
+do typu zmiennych, za które mogą być podstawiane inne typy. Termy otypowane w ten
+sposób muszą mieć sens niezależnie od tego, jakie typy zostaną przyporządkowane
+zmiennym, choć np. w Haskellu istnieje możliwość wprowadzenia ograniczeń na zmienne.
+Polimorfizm parametryczny odpowiada kwantyfikacji ogólnej z logiki. Typy takie
+mogą mieć składnię pozwalającą na zapisanie jawnego kwantyfikatora, wiążącego
+zmienne w typie, zamiast pozostawiania tych zmiennych jako niezwiązanych.
+W przykładzie \ref{lst:poly_parametric} funkcja \code{twice} jest polimorficzna,
+w jednym miejscu zmienna \code{a} służy za \code{Bool}, a w drugim za \code{String}.
+Funkcja \code{twice'} pokazuje wspomnianą jawną kwantyfikację, lecz poza tym jest
+równoważna poprzedniej funkcji. W języku Java polimorfizm parametryczny
+dostępny jest pod postacią typów generycznych.
 
 \begin{lstlisting}[float,label={lst:poly_parametric},
                    caption={Przykład użycia polimorfizmu parametrycznego w Haskellu.}]
@@ -317,8 +301,17 @@ main = do
     print $ twice ('-':) "Hello"   -- "--Hello"
 \end{lstlisting}
 
+W polimorfizmie ad hoc term może mieć przypisane różne typy dzięki temu,
+iż ma wiele definicji. W zależności od typu wykorzystywana jest inna z nich.
+W Haskellu ten polimorfizm jest dostępny w postaci klas typów\cite{TAPL}.
+W przykładzie \ref{lst:poly_adhoc} funkcja \code{foo} występuje raz jako
+funkcja typu \code{Bool -> Int} i raz jako \code{String -> Int}. W każdym
+przypadku ma inną definicję, sensowną dla wybranego wtedy typu. W Javie
+polimorfizm ten występuje pod postacią przeładowania metod, jak w przykładzie
+\ref{lst:poly_adhoc_java} z metodą \code{bar}.
+
 \begin{lstlisting}[float,label={lst:poly_adhoc},
-                   caption={Przykład użycia polimorfizmu ad-hoc w Haskellu.}]
+                   caption={Przykład użycia polimorfizmu ad hoc w Haskellu.}]
 class C a where
     foo :: a -> Int
 
@@ -335,13 +328,29 @@ main = do
     print $ foo "Hello"   -- 5
 \end{lstlisting}
 
-W kompilatorze etap ten \js{Jaki ``ten''? Przed chwilą było o polimorfiźmie}
-polega na sprawdzeniu, czy program jest poprawnie
-otypowany. Jednym z zadań type checkera jest wyświetlenie w razie błędu takich
-komunikatów, by pozwolić użytkownikowi zrozumieć w czym jest problem i je
-naprawić. Z tego powodu w czasie aż do tego etapu zachowywane są takie
-informacje jak lokalizacja w pliku wejściowym i identyfikatory wybrane przez
-użytkownika.
+\begin{lstlisting}[float,language=Java,label={lst:poly_adhoc_java},
+                   caption={Przykład użycia polimorfizmu ad hoc w Javie.}]
+public class Parametric {
+    public static void main(String... args) {
+        bar(10);       // bar int 10
+        bar("str");    // bar String str
+    }
+
+    static void bar(int arg) {
+        System.out.println("bar int " + arg);
+    }
+
+    static void bar(String arg) {
+        System.out.println("bar String " + arg);
+    }
+}
+\end{lstlisting}
+
+W kompilatorze sprawdzenie, czy program jest poprawnie otypowany, zachodzi w części
+zwanej type checkerem. Jednym z zadań type checkera jest wyświetlenie w razie błędu takich
+komunikatów, by pozwolić użytkownikowi zrozumieć problem i go naprawić.
+Z tego powodu w czasie aż do tego etapu zachowywane są takie informacje
+jak lokalizacja w pliku wejściowym i identyfikatory wybrane przez użytkownika.
 
 \section{Rozszerzenia Glasgow Haskell Compiler}\label{sec:rozszerzenia_ghc}
 
@@ -352,42 +361,21 @@ pozwala stwierdzić, że jest ich obecnie około stu. Rozszerzenia są opcjonaln
 domyślnie wyłączone. Uaktywnia się je dyrektywą języka umieszczoną na początku
 pliku modułu lub przez podanie odpowiednich flag wśród argumentów wywołania
 kompilatora. Wszystkie zmiany wykonane w tej pracy wiążą się z pewnymi
-rozszerzeniami, dlatego warto jest omówić. \js{gram.}
+rozszerzeniami, dlatego warto je omówić.
 
 \subsectionex{Rodziny typów}{Rozszerzenie \code{TypeFamilies}}\label{sec:rodziny_typow}
 
-W przykładzie \ref{lst:poly_adhoc} dzięki użyciu klas typów możliwe było
-uzależnienie definicji funkcji od typu. Rodziny typów pozwalają zrobić to samo z
-typami danych i synonimami typów, definiowanymi z użyciem słów kluczowych
-\code{data}, \code{newtype} i \code{type}. \js{Nie zrozumiałem.  Może lepiej po
-  prostu napisać, że są to funkcje operujące na typach w trakcie kompilacji?}
-
-Stworzenie rodziny typów wymaga podania deklaracji rodziny oraz pewnej liczby
-definicji lub równań. W przypadku rodzin związanych z klasą, deklaracja znajduje
-się w deklaracji klasy i musi wykorzystywać parametry klasy.
-\js{Wydaje mi się, że już na tym etapie warto sięgnąć po przykład - czytelnik
-  czytając o klasach z pewnością pomyśli o klasach w programowaniu obiektowym,
-  nie o klasach typów.}
-Może dodatkowo
+Rodziny typów to funkcje operujące na typach w trakcie kompilacji.
+Stworzenie rodziny typów wymaga podania deklaracji rodziny z liczbą i rodzajami
+parametrów oraz pewnej liczby definicji lub równań. W przypadku rodzin związanych
+z klasą, deklaracja znajduje się w deklaracji klasy i musi wykorzystywać parametry
+klasy. Przykładem takiej rodziny jest \code{Box} z klasy \code{T} na
+fragmencie \ref{lst:typefams_assoc_standalone}. Może dodatkowo
 posiadać równanie domyślne, o takim samym znaczeniu co domyślne definicje
 funkcji w klasie. Równania podaje się przy definiowaniu instancji klasy. W
-przypadku rodzin niezależnych od klasy, deklarację tworzy się z użyciem słowa
-kluczowego \code{family}, a równania albo wymienia się ze słowem kluczowym
-\code{instance} w przypadku rodzin otwartych, albo wymienia się wszystkie w
-miejscu deklaracji po \code{where}. Różne sposoby tworzenia rodzin widać na
-przykładach \ref{lst:typefams_assoc_standalone} i
-\ref{lst:typefams_open_close}. Niezależnie od tego czy rodzina jest powiązana,
-wykorzystanie różnych definicji funkcji w zależności od typu może wymagać
-utworzenia klasy. \js{Nie rozumiem ostatniego zdania}
-
-Rodziny typów dzielą się na rodziny typów danych i rodziny synonimów
-typów. Rodziny typów danych grupują definicje \code{data} i \code{newtype}, przy
-czym równania pierwszego typu bez przeszód mogą mieć więcej niż jeden
-konstruktor wartości, tak jak przy zwykłym definiowaniu typu danych. Rodziny
-synonimów typów grupują równania \code{type}, więc synonimów do już istniejących
-typów. Rodziny synonimów określają zależność między typami - argumentami i
-typami po prawych stronach równania, więc nazywane są też funkcjami na poziomie
-typów. \js{Ten akapit jest bardzo niejasny i trudny do zrozumienia.}
+przypadku rodzin niezależnych od klasy, jak \code{Cont} z przykładu
+\ref{lst:typefams_assoc_standalone}, deklarację tworzy się z użyciem słowa
+kluczowego \code{family}, a równania tworzy się ze słowem kluczowym \code{instance}.
 
 \begin{lstlisting}[float,label={lst:typefams_assoc_standalone},
                    caption={Przykład pozwiązanej z klasą i niezależnej rodziny typów.}]
@@ -426,34 +414,48 @@ instance S Bool where
     put (ContB0 ts fs) _    = ContB0 ts (fs + 1)
 \end{lstlisting}
 
-Funkcje na poziomie typów mogą mieć postać otwartą i zamkniętą. W formie
+Rodziny typów dzielą się na rodziny synonimów typów, deklarowane ze słowem
+kluczowym \code{type} i rodziny typów danych, deklarowane ze słowem
+kluczowym \code{data}. Równania należące do rodzin synonimów tworzą synonimy typów,
+podobne do tych z nierozszerzonego Haskella. W przykładzie \ref{lst:typefams_open_close}
+\code{Equal Int Int} jest synonimem \code{Int} i oba równie dobrze mogą znaleźć
+się w deklaracji typu dla \code{foo}. Analogicznie, rodziny typów danych grupują
+typy danych \code{data} lub \code{newtype}. Na przykład \code{Cont Int} z przykładu
+\ref{lst:typefams_assoc_standalone} to nazwa typu danych, którego wartości konstruuje się
+z użyciem \code{ContI0} lub \code{ContI1}.
+
+Rodziny synonimów mieć postać otwartą i zamkniętą. W formie
 zamkniętej wszystkie równania rodziny wymienione są w miejscu jej
-deklaracji. Mają tę zaletę wobec rodzin otwartych, iż określone równania mogą na
+deklaracji. Mają tę zaletę wobec rodzin otwartych, iż poszczególne równania mogą na
 siebie nachodzić i w takim wypadku stosowany jest synonim, którego równanie jest
-pierwsze od góry. W przypadku rodzin otwartych, kolejność równań nie jest
+pierwsze od góry. Przypomina to mechanizm dopasowania wzorców dostępny na poziomie
+termów. W przypadku rodzin otwartych, kolejność równań nie jest
 określona i mogą one być definiowane w wielu plikach, więc nachodzenie na siebie
 dziedzin równań powoduje błąd. Różnicę tę widać w przykładzie
 \ref{lst:typefams_open_close}\cite{GuideTypeFamilies}.
 
 \begin{lstlisting}[float,label={lst:typefams_open_close},
                    caption={Przykład otwartej i zamkniętej funkcji na typach z nachodzącymi na siebie dziedzinami.}]
-{-# LANGUAGE TypeFamilies, DataKinds #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module TypeFamilies where
 
 type family Equal a b where
-    Equal a a = True
-    Equal a b = False
+    Equal a a = a
+    Equal a b = (a, b)
 
-type family Open a b :: Bool
-type instance Open a a = True
-type instance Open a b = False
+foo :: Equal Int Int
+foo = 10
+
+type family Open a b
+type instance Open a a = a
+type instance Open a b = (a, b)
 
 {-
-families-overlapping.hs:10:15:
+families-overlapping.hs:13:15:
     Conflicting family instance declarations:
-      Open a a -- Defined at families-overlapping.hs:10:15
-      Open a b -- Defined at families-overlapping.hs:11:15
+      Open a a -- Defined at families-overlapping.hs:13:15
+      Open a b -- Defined at families-overlapping.hs:14:15
 -}
 \end{lstlisting}
 
