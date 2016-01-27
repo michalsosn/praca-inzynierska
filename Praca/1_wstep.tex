@@ -1,7 +1,7 @@
 \chapter{Wstęp}\label{chap:wstep}
 
 Zakresem niniejszej pracy inżynierskiej jest informatyka, w szczególności
-tworzenie dla języków funkcyjnych ze statycznymi systemami typów.
+tworzenie kompilatorów dla języków funkcyjnych ze statycznymi systemami typów.
 Przedmiotem pracy jest usprawnienie
 programowania z użyciem typów w Glasgow Haskell Compiler.
 
@@ -9,7 +9,7 @@ W popularnych, statycznie typowanych językach programowania, gramatyka przewidu
 kilka rodzajów wyrażeń. Są to termy, służące do wyrażania obliczeń, które mają zostać
 wykonane przez program po uruchomianiu i typy, które wiąże się z termami, by
 rozróżnić termy poprawne oraz niepoprawne, których wykonanie do końca nie byłoby możliwe.
-Niektóre języki zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
+Niektóre języki \js{w tym Haskell} zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
 typów taką rolę, jak typy wobec termów. Zawarte w temacie pracy mechanizmy programowania
 z użyciem typów pozwalają na dodanie do typów, obok ich pierwotnej roli, możliwości
 wyrażania obliczeń takich, jakie zwykle zarezerwowane są dla termów.
@@ -28,11 +28,18 @@ Obliczenia te wykonywane są na etapie sprawdzania typów w czasie kompilacji.
 
 Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell
 Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających
-programowanie z użyciem typów. GHC oferuje między innymi uogólnione algebraiczne
+programowanie z użyciem typów.
+\js{Naprawdę tym został podyktowany?  A może napisać o chęci zapoznania się z
+  budową kompilatora, uczestnictwa w projekcie open source itd?  To znaczy tak
+  podejrzewam że to mogło Pana zachęcić do tego tematu.  Po prostu zmierzam do
+  tego żeby napisać prawdę :-)  Oczywiście jeśli ten zapis zostanie zmieniony
+  to trzeba zmodyfikować tekst tak, żeby przejście do dalszej części dyskusji
+  było płynne.}
+GHC oferuje między innymi uogólnione algebraiczne
 typy danych (\foreign{GADTs}\cite{ExtPhantomTypes}\cite{ExtGADTs}),
 promocję typów danych (\foreign{data type promotion}\cite{ExtPromotion}),
 zależności funkcyjne między parametrami w klasach typów
-(\foreign(functional dependencies in multi-parameter type classes)\cite{ExtFunDeps})
+(\foreign{functional dependencies in multi-parameter type classes}\cite{ExtFunDeps})
 i rodziny typów (\foreign{type families}\cite{ExtAssocTyFams}\cite{ExtAssocTypesWithClass}\cite{ExtClosedTyFams})
 Biblioteka standardowa GHC dostarcza również pomocnych modułów, jak \code{Data.Type},
 \code{Data.Proxy} i \code{GHC.TypeLits} z przydatnymi typami i funkcjami na poziomie
@@ -40,7 +47,9 @@ typów jak operatory logiczne.
 Szczególnie istotnym rozszerzeniem są rodziny typów, gdyż umożliwiają
 definiowanie na poziomie typów funkcji wykorzystujących
 dopasowywanie wzorców oraz zależności funkcyjne w klasach typów,
-które dają równoważne możliwości, lecz wymagają programowania w innym stylu,
+które dają równoważne możliwości,
+\js{Równoważne do czego?  MPTC?}
+lecz wymagają programowania w innym stylu,
 relacyjnym zamiast funkcyjnego.
 
 Programowanie z użyciem typów możliwe jest również w innych językach. Na przykład,
@@ -50,6 +59,7 @@ jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródł
 mogłoby służyć do realizacji pracy o takim samym zakresie zamiast Haskella.
 % \js{Mam poczucie, że ostatni akapit nic nie wniósł.}
 % Być może przy takim układzie paragrafów wygląda to lepiej?
+% JS: tak, teraz jest dobrze.
 
 Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgodne z
 aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i Utrecht
@@ -68,6 +78,7 @@ nowo dodanych funkcji, ułatwiających korzystanie z nich, wciąż czeka na real
 Istotny jest też fakt, iż type checker to największy komponent GHC\cite{AOSA},
 więc podczas modyfikacji z dużym prawdopodobieństwem powstają nowe błędy.
 Podjęcie się realizacji tych usprawnień i naprawienia błędów są zatem dobrym tematem pracy.
+\js{Może w tym kontekście warto gdzieśtam potem w pracy wspomnieć o \#11451 ?}
 
 \section{Cele pracy}\label{sec:cele_pracy}
 

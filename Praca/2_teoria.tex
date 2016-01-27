@@ -63,6 +63,12 @@ Proces ten jest kontynuowany do przetworzenia całego wejścia.
 % Stąd leksemem nazywam ciąg znaków dopasowany do wyrażenia regularnego
 % a tokenem typ danych z Lexer.x data Token = ITas | ITcase | ...
 
+\js{(Odnośnie komentarza w kodzie źródłowym pracy: zgoda, rozumiem wytłumaczenie
+  i zgadzam się z nim, ale wydaje mi się że tekst pracy nadal jest odrobinkę
+  niejasny. Może spróbuje Pan to opisać tak zwyczajnie jak Pan wytłumaczył w
+  komentarzu? Ponadto pierwsze zdanie akapitu mówi o generowaniu tokenów, ale
+  zgodnie z tym co zrozumiałem to chyba właśnie będą ciągi leksemów?}
+
 W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja
 gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. W przykładzie
 \ref{lst:alex_example} pokazane są fragmenty tego pliku. Na początku widoczne są
@@ -244,6 +250,9 @@ Typy są przyporządkowywane termom w relacji typowania wynikającej z pewnych
 reguł typowania. Zbiór tych reguł składa się na system typów. System typów służy do
 wykrywania bezsensownych termów bez ich ewaluowania, często już na etapie kompilacji.
 System typów jest konkluzywny lub bezpieczny,
+\js{Dowiedziałem się ostatnio, że soundness jest w Polsce tłumaczone jako
+  poprawność, natomiast completness tłumaczy się jako pełność (preferencja
+  Warszawy) albo zupełność (preferencja Wrocławia).}
 jeżeli każdy term, który ma w nim przyporządkowany typ, jest sensowny. Z kolei
 jest zupełny, jeżeli każdy sensowny term jest w nim otypowany. Systemy typów w
 popularnych językach są przeważnie konkluzywne, lecz nie zupełne. Rozszerzenia
@@ -349,7 +358,7 @@ public class Parametric {
 W kompilatorze sprawdzenie, czy program jest poprawnie otypowany, zachodzi w części
 zwanej type checkerem. Jednym z zadań type checkera jest wyświetlenie w razie błędu takich
 komunikatów, by pozwolić użytkownikowi zrozumieć problem i go naprawić.
-Z tego powodu w czasie aż do tego etapu zachowywane są takie informacje
+Z tego powodu aż do tego etapu kompilacji zachowywane są takie informacje
 jak lokalizacja w pliku wejściowym i identyfikatory wybrane przez użytkownika.
 
 \section{Rozszerzenia Glasgow Haskell Compiler}\label{sec:rozszerzenia_ghc}
