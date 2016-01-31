@@ -20,10 +20,10 @@ $(THESIS).bbl: $(BIBLIOGRAPHY).bib
 	pdflatex $(THESIS).tex
 	bibtex $(THESIS)
 
-$(THESIS).tar.gz: $(THESIS).pdf web-sources
+$(THESIS).tar.gz: $(THESIS).pdf
 	tar czf $(THESIS).tar.gz $(THESIS).pdf $(THESIS).tex \
 		$(SRC_FILES:%=%.tex) $(STYLE) $(BIBLIOGRAPHY).bib \
-	    $(WEB_SOURCES) $(OTHER_FILES)
+	    $(OTHER_FILES)
 
 web-sources:
 	grep '\\url{.*}' $(BIBLIOGRAPHY).bib | sed 's/^.*\\url{\(.*\)}.*$$/\1/' | \
