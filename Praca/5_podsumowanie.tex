@@ -1,43 +1,43 @@
-\chapter{Podsumowanie i wnioski}\label{chap:podsumowanie}
+\chapter{Podsumowanie i~wnioski}\label{chap:podsumowanie}
 
 \section{Dyskusja wyników}
 
-Dzięki zrealizowaniu pracy sposób wyświetlania rodzin typów w błędach i
-ostrzeżeniach kompilatora ujednolicono. Dodane zostało wyświetlanie prawych
-stron równań rodzin typów danych w sposób naśladujący składnię tych
-konstrukcji. Stary, oddający wewnętrzną reprezentację rodzin typów danych sposób
-wyświetlania został zachowany w zrzucie z etapu sprawdzania typów.
+Dzięki zrealizowaniu pracy, sposób wyświetlania rodzin typów w~błędach
+i~ostrzeżeniach kompilatora jest ujednolicony. Dodane zostało wyświetlanie prawych
+stron równań rodzin typów danych w~sposób naśladujący składnię tych
+konstrukcji. Stary sposób wyświetlania, oddający wewnętrzną reprezentację
+rodzin typów danych, został zachowany w~zrzucie z~etapu sprawdzania typów.
 
-Dodane zostało także opcjonalne wyświetlanie ostrzeżeń o nieużywanych zmiennych
-w rodzinach typów. Zmienna uważana jest za nieużywaną jeżeli występuje we
-wzorcach po lewej stronie równania tylko raz i nie występuje w typie po prawej
+Dodane zostało także opcjonalne wyświetlanie ostrzeżeń o~nieużywanych zmiennych
+w~rodzinach typów. Zmienna uważana jest za nieużywaną jeżeli występuje we
+wzorcach po lewej stronie równania tylko raz i~nie występuje w~typie po prawej
 stronie.
 
-Poprawiony został błąd z zamianą zmiennych typów zaczynających się od
-podkreślnika w symbole wieloznaczne w kontekstach, gdzie są one
+Poprawiony został błąd z~zamianą zmiennych typów zaczynających się od
+podkreślnika w~symbole wieloznaczne w~kontekstach, gdzie są one
 niedozwolone. Algorytm renamera został również zmieniony tak, by nie dokonywał
 zamiany zmiennych jawnie związanych kwantyfikatorem. Dzięki temu uaktywnienie
-rozszerzenia \code{NamedWildCards} nie powoduje już odrzucania programów.
+rozszerzenia \code{NamedWildCards} nie powoduje już odrzucania poprawnych programów.
 
-Wszystkie te trzy modyfikacje przeszły proces rewizji kodu w systemie
-Phabricator i znalazły się w repozytorium. Od tamtej pory wprowadzony kod
-podlegał dodatkowym modyfikacjom i refaktoryzacji dokonanej przez innych
-programistów. W szczególności część dotycząca \code{NamedWildCards} została
-w dużej części zastąpiona przez alternatywne rozwiązanie Simona
-Peytona Jonesa. Z kolei ostrzeżenia o nieużywanych zmiennych typów w wyniku
+Wszystkie te trzy modyfikacje przeszły proces rewizji kodu w~systemie
+Phabricator i~znalazły się w~repozytorium. Od tamtej pory wprowadzony kod
+podlegał dodatkowym modyfikacjom i~refaktoryzacji dokonanej przez innych
+programistów. W~szczególności część dotycząca \code{NamedWildCards} została
+w~dużej części zastąpiona przez alternatywne rozwiązanie Simona
+Peytona Jonesa. Z~kolei ostrzeżenia o~nieużywanych zmiennych typów w~wyniku
 zgłoszenia nr 11451 są uaktywniane nową flagą \code{-Wunused-type-variables}
 zamiast \code{-Wunused-matches}.
-Jednak wszystkie usprawnienia dalej są dostępne w
-kompilatorze, dlatego cele pracy należy uznać za zrealizowane.
+Jednak wszystkie wprowadzone w tej pracy usprawnienia dalej są dostępne
+w~kompilatorze, dlatego cele należy uznać za zrealizowane.
 
 \section{Perspektywy dalszych badań}
 System Trac na stronie GHC zawiera obecnie ponad 1600 otwartych
-zgłoszeń\cite{WikiTickets}. W innych pracach można podjąć się dokonania następnych
-usprawnień związanych z programowaniem z użyciem typów lub z inną częścią
+zgłoszeń\cite{WikiTickets}. W~innych pracach można podjąć się dokonania następnych
+usprawnień związanych z~programowaniem z~użyciem typów lub z~inną częścią
 kompilatora. Złożone propozycje mają poświęcone sobie podstrony na wiki GHC,
 gdzie można znaleźć ich planowane funkcje, projekty, opisy przebiegu
-implementacji i odnośniki do prac badawczych, na których bazują. Są to na
+implementacji i~odnośniki do prac badawczych, na których bazują. Są to na
 przykład propozycja dodania typów zależnych do Haskella lub wprowadzenia
 definiowanych przez użytkownika błędów typów. Praca mogłaby polegać również na
-sformułowaniu nowej propozycji i zaimplementowaniu jej. Możliwości są szerokie i
-wiele osób zdecydowało się już poświęcić swój czas GHC.
+sformułowaniu nowej propozycji i~zaimplementowaniu jej. Możliwości są szerokie
+i~wiele osób zdecydowało się już poświęcić swój czas GHC.
