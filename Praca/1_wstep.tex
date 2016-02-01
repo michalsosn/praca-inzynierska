@@ -4,7 +4,7 @@ Zakresem niniejszej pracy inżynierskiej jest
 tworzenie kompilatorów dla języków funkcyjnych ze statycznymi systemami typów.
 Przedmiotem pracy jest usprawnienie
 programowania z~użyciem typów w~Glasgow Haskell Compiler.
-Został on wybrany ze względu na chęć zapoznania się z~budową kompilatora oraz
+Temat został wybrany ze względu na chęć zapoznania się z~budową kompilatora oraz
 udziału w~rozwoju powszechnie używanego programu.
 
 W~popularnych, statycznie typowanych językach programowania, gramatyka przewiduje
@@ -13,15 +13,15 @@ wykonane po uruchomianiu programu oraz typy, które przypisuje się termom, by
 rozróżnić termy poprawne oraz niepoprawne.
 Niektóre języki, w~tym Haskell, zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
 typów taką rolę, jak typy wobec termów. Zawarte w~temacie pracy mechanizmy programowania
-z~użyciem typów pozwalają na dodanie do typów, obok ich pierwotnej roli, możliwości
-wyrażania obliczeń, która zwykle zarezerwowana jest dla termów.
+z~użyciem typów dodają do typów, obok ich pierwotnej roli, możliwości
+wyrażania obliczeń, jakie zwykle zarezerwowana są dla termów.
 Obliczenia te wykonywane są na etapie sprawdzania typów w~czasie kompilacji.
 
 Praca została poświęcona językowi Haskell i~kompilatorowi Glasgow Haskell
 Compiler. Wybór ten został podyktowany tym, iż jest to projekt \foreign{open source}
 i~dołączenie do niego ułatwione było dzięki zasobom opisującym jak się wdrożyć
 oraz~pomocnej społeczności.
-Drugim kryterium wyboru była dostępność rozszerzeń umożliwiających
+Drugim kryterium była dostępność rozszerzeń umożliwiających
 programowanie z~użyciem typów.
 GHC oferuje między innymi uogólnione algebraiczne
 typy danych (\foreign{GADTs}\cite{ExtPhantomTypes}\cite{ExtGADTs}),
@@ -34,8 +34,8 @@ definiowanie na poziomie typów funkcji wykorzystujących
 dopasowywanie wzorców oraz zależności funkcyjne w~klasach typów,
 które dają równoważne możliwości,
 lecz wymagają programowania w~stylu relacyjnym zamiast funkcyjnego.
-Biblioteka standardowa GHC dostarcza również pomocne moduły, jak \code{Data.Type},
-\code{Data.Proxy} i~\code{GHC.TypeLits} z~przydatnymi typami i~funkcjami na poziomie
+Biblioteka standardowa GHC dostarcza również pomocne moduły, na przykład \code{Data.Type},
+\code{Data.Proxy} i~\code{GHC.TypeLits}, z~przydatnymi typami i~funkcjami na poziomie
 typów, jak operatory logiczne.
 
 Programowanie z~użyciem typów możliwe jest również w~innych językach. Na przykład,
