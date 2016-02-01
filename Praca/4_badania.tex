@@ -418,7 +418,6 @@ identyfikatory jako zwykłe zmienne typów, a następnie zamieniać część z n
 renamerze. Rzeczywiście, w ramach pracy dokonano zmian w \code{Parser.y}, by
 bezwarunkowo konstruowane były \code{HsTyVar}, reprezentujące zmienne typu.
 
-%\js{Przyznam, że trudno się to czyta nie mając kodu przed oczami.}
 Do rekordu \code{LocalRdrEnv} przekazywanego w monadzie renamera \code{RnM} dodane zostało
 pole \code{lre\underscore nwcs}, będące zbiorem nazw zmiennych, które powinny
 zostać zastąpione przez symbole wieloznaczne. Rozwiązanie problemu z fragmentu

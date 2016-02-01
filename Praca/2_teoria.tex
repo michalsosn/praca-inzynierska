@@ -12,7 +12,6 @@ wielu \foreign{frontendów} i \foreign{backendów}, na przykład w GHC dostępne
 trzy \foreign{backendy}, generujące kod maszynowy, kod w języku pośrednim LLVM
 lub kod w C\cite{AOSA}. GHC może być uruchomiony w trybie interaktywnym, jako
 interpreter GHCi.
-%\js{Ostatnie zdanie nic nie wnosi} - GHCi pojawia się w części 4, więc chciałem o nim napomknąć
 
 \foreign{Frontend} odpowiada za przeanalizowanie tekstu otrzymanego na wejściu
 zgodnie z gramatyką języka, zbudowanie z niego drzewa składniowego i
@@ -45,29 +44,15 @@ Parsowanie w GHC dzieli się na etapy analizy leksykalnej i składniowej. Jest t
 proces tak dobrze opracowany od strony algorytmicznej, że istnieją narzędzia,
 które pozwalają na generowanie gotowych lekserów i parserów z opisu gramatyki.
 
-W czasie analizy leksykalnej plik na wejściu jest skanowany i generowany jest
-z niego strumień tzw. tokenów. W GHC są to wartości typu \code{Token}
-zdefiniowanego w \code{Lexer.x}. Gramatyka leksykalna jest definiowana
-w postaci szeregu wyrażeń regularnych, odpowiadających kolejnym tokenom.
-Lekser wyodrębnia z ciągu znaków na wejściu podciągi pasujące do wyrażeń,
-czyli leksemy. Stosowana jest metoda najdłuższego dopasowania, tzn. lekser
-wczytuje kolejne znaki tak długo, aż przynajmniej jedno wyrażenie akceptuje
-wczytany podciąg, po czym zwraca token odpowiadający temu wyrażeniu.
+W czasie analizy leksykalnej plik na wejściu jest skanowany, dzielony na ciągi
+znaków, tzw. leksemy i generowany jest z niego strumień wartości zwanych tokenami.
+W GHC tokeny to wartości typu \code{Token}, zdefiniowanego w pliku \code{Lexer.x}.
+Gramatyka leksykalna składa się z szeregu wyrażeń regularnych i odpowiadających im tokenów.
+Leksemy wyodrębniane są, gdy dojdzie do dopasowania ciągu znaków na wejściu do jednego z wyrażeń.
+Stosowana jest metoda najdłuższego dopasowania, to znaczy lekser
+wczytuje kolejne znaki tak długo, dopóki przynajmniej jedno wyrażenie akceptuje
+wczytany podciąg. Po dopasowaniu lekser zwraca token odpowiadający temu wyrażeniu.
 Proces ten jest kontynuowany do przetworzenia całego wejścia.
-%\js{Mówi Pan o leksemach, a potem w pewnym momencie pojawiają
-%  się tokeny.  Może już przy pierwszej wzmiance o leksemach warto napisać, że są
-%  inaczej nazywane tokenami.}
-% Kierując się \cite{Dragon} postanowiłem przyjąć odrobinę różne znaczenie słów leksem i token
-% "A lexeme is a sequence of characters in the source program that matches the pattern for a token and is identified by the lexical analyzer as an instance of that token."
-% "A token is a pair consisting of a token name and an optional attribute value. The token name is an abstract symbol representing a kind of lexical unit..."
-% Stąd leksemem nazywam ciąg znaków dopasowany do wyrażenia regularnego
-% a tokenem typ danych z Lexer.x data Token = ITas | ITcase | ...
-
-\js{(Odnośnie komentarza w kodzie źródłowym pracy: zgoda, rozumiem wytłumaczenie
-  i zgadzam się z nim, ale wydaje mi się że tekst pracy nadal jest odrobinkę
-  niejasny. Może spróbuje Pan to opisać tak zwyczajnie jak Pan wytłumaczył w
-  komentarzu? Ponadto pierwsze zdanie akapitu mówi o generowaniu tokenów, ale
-  zgodnie z tym co zrozumiałem to chyba właśnie będą ciągi leksemów?}
 
 W GHC lekser jest generowany z wykorzystaniem narzędzia Alex. Definicja
 gramatyki leksykalnej zawarta jest w pliku \code{Lexer.x}. W przykładzie
@@ -223,12 +208,11 @@ Semantykę operacyjną określa się przez przez podanie reguł ewaluacji, z kt�
 wynika ta relacja.
 
 Wykonywanie programu może zatrzymać się w stanie uważanym za końcowy. Term
-w postaci do jakiej zostaje znormalizowany w stanie końcowym nazywamy wartością.
-
-Obliczenia mogą też się nigdy nie zatrzymać lub utknąć w stanie, który nie jest
+w postaci, do której został znormalizowany w stanie końcowym, nazywamy wartością.
+Obliczenia mogą również nigdy nie zatrzymać lub utknąć w stanie, który nie jest
 końcowy, lecz dla którego relacja przejścia nie określa dalszych kroków.
 Termy, dla których taki jest rezultat, nazywamy niepoprawnymi lub
-bezsensownymi\cite{TAPL} jak na przykładzie \ref{lst:types_nonsense}.
+bezsensownymi\cite{TAPL}, jak na przykładzie \ref{lst:types_nonsense}.
 
 \begin{lstlisting}[float,label={lst:types_nonsense},
                    caption={Przykład bezsensownego wyrażenia w programie, z błędem GHC, który wywołuje.}]
@@ -249,13 +233,11 @@ nonsense.hs:3:15:
 Typy są przyporządkowywane termom w relacji typowania wynikającej z pewnych
 reguł typowania. Zbiór tych reguł składa się na system typów. System typów służy do
 wykrywania bezsensownych termów bez ich ewaluowania, często już na etapie kompilacji.
-System typów jest konkluzywny lub bezpieczny,
-\js{Dowiedziałem się ostatnio, że soundness jest w Polsce tłumaczone jako
-  poprawność, natomiast completness tłumaczy się jako pełność (preferencja
-  Warszawy) albo zupełność (preferencja Wrocławia).}
+System typów jest poprawny (\foreign{sound}) lub bezpieczny,
 jeżeli każdy term, który ma w nim przyporządkowany typ, jest sensowny. Z kolei
-jest zupełny, jeżeli każdy sensowny term jest w nim otypowany. Systemy typów w
-popularnych językach są przeważnie konkluzywne, lecz nie zupełne. Rozszerzenia
+jest zupełny (\foreign{complete}), jeżeli każdy sensowny term jest w nim otypowany.
+Systemy typów w
+popularnych językach są przeważnie poprawne, lecz niezupełne. Rozszerzenia
 systemu typów dążą do zmniejszenia liczby poprawnych programów, które są w
 systemie typów niedopuszczalne, co można określić jako zwiększenie jego
 ekspresywności. Rozszerzenia mogą doprowadzić do tego, że problem sprawdzenia,

@@ -1,65 +1,48 @@
 \chapter{Wstęp}\label{chap:wstep}
 
-Zakresem niniejszej pracy inżynierskiej jest informatyka, w szczególności
+Zakresem niniejszej pracy inżynierskiej jest
 tworzenie kompilatorów dla języków funkcyjnych ze statycznymi systemami typów.
 Przedmiotem pracy jest usprawnienie
 programowania z użyciem typów w Glasgow Haskell Compiler.
+Został on wybrany ze względu na chęć zapoznania się z budową kompilatora oraz
+udziału w rozwoju powszechnie używanego programu.
 
 W popularnych, statycznie typowanych językach programowania, gramatyka przewiduje
 kilka rodzajów wyrażeń. Są to termy, służące do wyrażania obliczeń, które mają zostać
-wykonane przez program po uruchomianiu i typy, które wiąże się z termami, by
+wykonane przez program po uruchomianiu oraz typy, które wiąże się z termami, by
 rozróżnić termy poprawne oraz niepoprawne, których wykonanie do końca nie byłoby możliwe.
-Niektóre języki \js{w tym Haskell} zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
+Niektóre języki, w tym Haskell, zawierają jeszcze rodzaje (\foreign{kinds}), które pełnią wobec
 typów taką rolę, jak typy wobec termów. Zawarte w temacie pracy mechanizmy programowania
 z użyciem typów pozwalają na dodanie do typów, obok ich pierwotnej roli, możliwości
-wyrażania obliczeń takich, jakie zwykle zarezerwowane są dla termów.
+wyrażania obliczeń, które zwykle charakterystyczne są dla termów.
 Obliczenia te wykonywane są na etapie sprawdzania typów w czasie kompilacji.
 
-% \js{Nie jestem pewien czy użyłbym po polsku określenia ``poziom termów'' -
-%   obawiam się że słowo ``term'' może mieć w polskiej terminologii znaczenie
-%   typowo matematyczne, nie programistyczne.  Może lepiej mówić o wyrażeniach
-%   (ang. ``expressions'')?  I na pewno należy się tutaj kilka słów wyjaśniania.
-%   Pan i ja wiemy co to jest poziom typów i programowanie na poziomie typów -
-%   inni czytelnicy (recenzent...) prawdopodobnie nie. }
-% Starałem się stosować nazwy podążając za tą wzmianką w \cite{TAPL}
-% "...we will use expression for all sorts of syntactic phrases
-% (including term expressions, type expressions, kind expressions),
-% reserving term for the more specialized sense of phrases representing computation."
-
 Praca została poświęcona językowi Haskell i kompilatorowi Glasgow Haskell
-Compiler. Wybór ten został podyktowany dostępnością rozszerzeń umożliwiających
+Compiler. Wybór ten został podyktowany tym, iż jest to projekt \foreign{open source},
+więc dołączenie do niego było nie tylko możliwe, ale i aktywnie ułatwiane
+dzięki zasobom opisującym jak się wdrożyć i pomocnym ludziom.
+Drugim kryterium wyboru była dostępność rozszerzeń umożliwiających
 programowanie z użyciem typów.
-\js{Naprawdę tym został podyktowany?  A może napisać o chęci zapoznania się z
-  budową kompilatora, uczestnictwa w projekcie open source itd?  To znaczy tak
-  podejrzewam że to mogło Pana zachęcić do tego tematu.  Po prostu zmierzam do
-  tego żeby napisać prawdę :-)  Oczywiście jeśli ten zapis zostanie zmieniony
-  to trzeba zmodyfikować tekst tak, żeby przejście do dalszej części dyskusji
-  było płynne.}
 GHC oferuje między innymi uogólnione algebraiczne
 typy danych (\foreign{GADTs}\cite{ExtPhantomTypes}\cite{ExtGADTs}),
 promocję typów danych (\foreign{data type promotion}\cite{ExtPromotion}),
 zależności funkcyjne między parametrami w klasach typów
 (\foreign{functional dependencies in multi-parameter type classes}\cite{ExtFunDeps})
 i rodziny typów (\foreign{type families}\cite{ExtAssocTyFams}\cite{ExtAssocTypesWithClass}\cite{ExtClosedTyFams})
-Biblioteka standardowa GHC dostarcza również pomocnych modułów, jak \code{Data.Type},
+Biblioteka standardowa GHC dostarcza również pomocne moduły, jak \code{Data.Type},
 \code{Data.Proxy} i \code{GHC.TypeLits} z przydatnymi typami i funkcjami na poziomie
 typów jak operatory logiczne.
 Szczególnie istotnym rozszerzeniem są rodziny typów, gdyż umożliwiają
 definiowanie na poziomie typów funkcji wykorzystujących
 dopasowywanie wzorców oraz zależności funkcyjne w klasach typów,
 które dają równoważne możliwości,
-\js{Równoważne do czego?  MPTC?}
-lecz wymagają programowania w innym stylu,
-relacyjnym zamiast funkcyjnego.
+lecz wymagają programowania w stylu relacyjnym zamiast funkcyjnego.
 
 Programowanie z użyciem typów możliwe jest również w innych językach. Na przykład,
 Scala oferuje do tego \foreign{path dependent types}, a w C++ możliwe jest
 metaprogramowanie z użyciem szablonów. Istnieją też języki z typami zależnymi
 jak Agda lub Idris. Wiele z tych języków ma implementacje o otwartych źródłach i
-mogłoby służyć do realizacji pracy o takim samym zakresie zamiast Haskella.
-% \js{Mam poczucie, że ostatni akapit nic nie wniósł.}
-% Być może przy takim układzie paragrafów wygląda to lepiej?
-% JS: tak, teraz jest dobrze.
+mogłoby służyć do realizacji pracy o tym samym zakresie zamiast Haskella.
 
 Istnieje kilka implementacji języka Haskell. Spośród nich tylko dwie są zgodne z
 aktualną specyfikacją języka Haskell 2010, Glasgow Haskell Compiler i Utrecht
@@ -78,7 +61,6 @@ nowo dodanych funkcji, ułatwiających korzystanie z nich, wciąż czeka na real
 Istotny jest też fakt, iż type checker to największy komponent GHC\cite{AOSA},
 więc podczas modyfikacji z dużym prawdopodobieństwem powstają nowe błędy.
 Podjęcie się realizacji tych usprawnień i naprawienia błędów są zatem dobrym tematem pracy.
-\js{Może w tym kontekście warto gdzieśtam potem w pracy wspomnieć o \#11451 ?}
 
 \section{Cele pracy}\label{sec:cele_pracy}
 
@@ -149,4 +131,4 @@ opisuje technologie i narzędzia wykorzystane w pracy. W rozdziale
 \ref{chap:badania} przedstawiono opis dokonanych zmian w GHC. Rozdział
 \ref{chap:podsumowanie} zawiera podsumowanie czy założone cele zostały
 osiągnięte. Dodatek \ref{app:plyta} zawiera płytę CD z kodem aplikacji,
-kopią tej pracy oraz wykorzystanych źródeł internetowych.
+wersją elektroniczną tej pracy oraz kopią wykorzystanych źródeł internetowych.

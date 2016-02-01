@@ -22,9 +22,12 @@ rozszerzenia \code{NamedWildCards} nie powoduje już odrzucania programów.
 Wszystkie te trzy modyfikacje przeszły proces rewizji kodu w systemie
 Phabricator i znalazły się w repozytorium. Od tamtej pory wprowadzony kod
 podlegał dodatkowym modyfikacjom i refaktoryzacji dokonanej przez innych
-programistów. W szczególności część dotycząca \code{NamedWildCards} została od
-tamtego czasu w dużej części zastąpiona przez alternatywne rozwiązanie Simona
-Peytona Jonesa. Jednak wszystkie usprawnienia dalej są dostępne w
+programistów. W szczególności część dotycząca \code{NamedWildCards} została
+w dużej części zastąpiona przez alternatywne rozwiązanie Simona
+Peytona Jonesa. Z kolei ostrzeżenia o nieużywanych zmiennych typów w wyniku
+zgłoszenia nr 11451 są uaktywniane nową flagą \code{-Wunused-type-variables}
+zamiast \code{-Wunused-matches}.
+Jednak wszystkie usprawnienia dalej są dostępne w
 kompilatorze, dlatego cele pracy należy uznać za zrealizowane.
 
 \section{Perspektywy dalszych badań}
